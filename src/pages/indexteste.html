@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA com JS Puro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 h-full flex items-center justify-center">
+
+    <div class="w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
+        <nav class="flex justify-between border-b pb-2">
+            <a href="#home" class="text-blue-500">Home</a>
+            <a href="#about" class="text-blue-500">Sobre</a>
+            <a href="#contact" class="text-blue-500">Contato</a>
+        </nav>
+        <div id="app" class="mt-4"></div>
+    </div>
+
+    <script>
+        const routes = {
+            home: `<h1 class="text-xl font-bold">🏡 Bem-vindo à Home!</h1><p class="mt-2">Esta é a página inicial.</p>`,
+            about: `<h1 class="text-xl font-bold">ℹ️ Sobre nós</h1><p class="mt-2">Aqui falamos sobre nossa aplicação.</p>`,
+            contact: `<h1 class="text-xl font-bold">📞 Contato</h1><p class="mt-2">Fale conosco pelo email contato@spa.com</p>`,
+        };
+
+        function loadRoute() {
+            const hash = window.location.hash.substring(1) || "home";
+            document.getElementById("app").innerHTML = routes[hash] || `<h1 class="text-red-500">404 - Página não encontrada</h1>`;
+        }
+
+        window.addEventListener("hashchange", loadRoute);
+        window.addEventListener("load", loadRoute);
+    </script>
+
+</body>
+</html>

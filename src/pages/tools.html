@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/src/assets/img/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ferramentas</title>
+    <link href="/src/assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e40af">
+
+  </head>
+  <body  >
+    <main class="bg-background-100 flex flex-col relative h-[100vh] overflow-y-auto pb-5" >
+        <header class="flex justify-between self-center mt-10 3xl:items-center w-[1418.25px] mx-auto max-3xl:w-[800px] max-3xl:flex-col max-4xl:w-full ">
+            <div class="flex flex-col max-3xl:mb-5 max-4xl:ml-5">
+                <a href="/src/pages/indexteste.html"><p class="text-text-100 text-[16px]">Controle de Finanças Pessoais</p></a>
+                <h1 class="text-text-200 text-[36px] font-bold mt-0.5 mb-1">Balanço mensal</h1>
+                <p class="text-green-700 text-[36px]" id="money">R$ 8.531,72</p>
+            </div>
+            <div class="flex flex-wrap 3xl:h-[70px] text-text-100 gap-3 max-4xl:px-5 max-4xl:justify-center">
+                <div class="flex text-[16px] w-auto bg-background-200 items-center justify-between pl-5 pr-5 gap-10 rounded-[10px] max-4xl:h-[70px] max-4xl:w-full">
+                    <a href="index.html">
+                      <div class="flex gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-7">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                        </svg>
+                        <p class="mt-b ">Dashboard</p>
+                    </div>
+                    </a>
+                    <a href="/src/pages/tools.html">
+                      <div class="flex gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-7">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                        </svg>
+                        <p class="mt-b font-semibold">Ferramentas</p>
+                    </div>
+                    </a>
+                </div>
+                <div class="flex flex-col items-center pl-3 pr-3 bg-background-200 rounded-[10px] max-4xl:w-full">
+                    <p id="city-name" class="text-[20px]">...</p>
+                    <p id="temperature" class="text-[30px] mt-[-10px] font-semibold">--º</p>
+                </div>
+                <div class="flex items-center justify-center bg-background-200 rounded-[10px] pl-7 pr-7 gap-1 max-4xl:h-[70px] max-4xl:w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                    </svg>
+                    <p id="current-date" class="text-text-100">...</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-11 self-center cursor-pointer" id="toggle-theme">
+                    <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+                </svg>
+                <div class="flex gap-3 h-[80px]">
+                    <div class="text-text-100 flex flex-col items-end">
+                        <p class="text-[25px]">Julius Rock</p>
+                        <p class="text-text-200">Plano gratuito</p>
+                    </div>
+                    <img src="/src/assets/img/julius.png" alt="imagem de perfil" class="w-[80px] rounded-full object-cover">
+                </div>
+            </div>
+        </header>
+        <main class="flex flex-col self-center mt-10 w-auto" >
+            <section class="flex flex-col bg-background-200 w-[1200px] rounded-[10px] pt-4" >
+                <h2 class="text-text-200 font-semibold text-[36px] ml-24" >Calculadora de Juros Compostos</h2>
+                <div class="flex flex-wrap text-text-100 text-[20px] mt-5 gap-10 justify-center" >
+                    <div class="flex flex-col  w-[40%]" >
+                        <label for="valueInitial">Valor Inicial</label>
+                        <div class="flex mt-3" >
+                            <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >R$</p>
+                            <input step="0.01" type="number" name="valueInitial" class="bg-white  rounded-br-[5px]  rounded-tr-[5px] h-[45px] text-black pl-1 focus:outline-none w-full">
+                        </div>
+                    </div>
+                    <div class="flex flex-col  w-[40%]" >
+                        <label for="valueInitial">Valor Mensal</label>
+                        <div class="flex mt-3" >
+                            <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >R$</p>
+                            <input step="0.01" type="number" name="valueInitial" class="bg-white  rounded-br-[5px] rounded-tr-[5px] h-[45px] text-black pl-1 focus:outline-none w-full">
+                        </div>
+                    </div>
+                    <div class="flex flex-col  w-[40%]" >
+                        <label for="valueInitial">Taxa de Juros</label>
+                        <div class="flex mt-3" >
+                            <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >%</p>
+                            <input step="0.01" type="number" name="valueInitial" class="bg-white h-[45px] text-black pl-1 focus:outline-none w-full">
+                            <select name="timeInterest" id="timeInterest" class="bg-[#b9b9b9] rounded-br-[5px] rounded-tr-[5px] px-1 text-black pl-1 focus:outline-none">
+                                <option value="yearly">Anual</option>
+                                <option value="monthly">Mensal</option>
+                                <option value="daily">Diário</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex flex-col  w-[40%]" >
+                        <label for="valueInitial">Período</label>
+                        <div class="flex mt-3" >
+                            <input step="0.01" type="number" name="valueInitial" class="bg-white pl-1 h-[45px] text-black pl-1 focus:outline-none rounded-bl-[5px] rounded-tl-[5px] w-full">
+                            <select name="timeInterest" id="timeInterest" class="bg-[#b9b9b9] rounded-br-[5px] rounded-tr-[5px] px-1 text-black pl-1 focus:outline-none">
+                                <option value="years">Ano(s)</option>
+                                <option value="month">Mês(es)</option>
+                                <option value="day">Dia(s)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold mr-24 mb-8" id="addTrasaction">Registrar</button>
+            </section>
+            <section class="flex flex-col bg-background-200 w-[1160px] rounded-[10px] pt-4 mt-20 self-center" >
+                <h2 class="text-text-200 font-semibold text-[36px] ml-14 mb-5" >Calculadora de Juros Compostos</h2>
+                <div class="flex w-full justify-around px-8 mb-5" >
+                    <div class="flex flex-col items-center text-text-100 justify-center bg-background-300 text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]" >
+                        <p>Valor total final</p>
+                        <p>R$ 37.206,99</p>
+                    </div>
+                    <div class="flex flex-col items-center text-text-100 justify-center border-background-300 border-[1px] text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]" >
+                        <p>Valor total final</p>
+                        <p>R$ 37.206,99</p>
+                    </div>
+                    <div class="flex flex-col items-center text-text-100 justify-center border-background-300 border-[1px] text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]" >
+                        <p>Total em juros</p>
+                        <p>R$ 37.206,99</p>
+                    </div>
+                </div>
+                <div class="flex bg-background-300 text-[26px] font-bold h-20 w-[420px] items-center justify-center rounded-[10px] self-center" >
+                    <p class="w-[48%] py-3 rounded-[10px] text-center bg-background- text-[#5e81ac] bg-background-100" >Tabela</p>
+                    <p class="w-[48%] py-3 rounded-[10px] text-center text-[#d8dee9]" >Gráfico</p>
+                </div>
+            </section>
+            
+        </main>
+    </main>
+    <script type="module" src="/src/assets/js/main.js"></script>
+  </body>
+</html>
