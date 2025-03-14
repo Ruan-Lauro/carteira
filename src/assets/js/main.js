@@ -8,7 +8,9 @@ if ('serviceWorker' in navigator) {
           console.log('ServiceWorker registration failed:', error);
         });
     });
-  }
+}
+
+localStorage.setItem('theme', 'dark');
   
 function formatDate() {
     const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
@@ -76,7 +78,7 @@ async function initApp() {
     document.getElementById('current-date').textContent = formatDate();
 
     let locationData;
-    let weatherData = { temperature: '--', cityName: 'Localização indisponível' };
+    let weatherData = { temperature: '--', cityName: 'null' };
 
     try {
         locationData = await getCityByGeolocation();
@@ -99,7 +101,6 @@ async function initApp() {
 document.addEventListener('DOMContentLoaded', initApp);
 
 document.addEventListener("DOMContentLoaded", () => {
-    const toggleThemeButton = document.getElementById("toggle-theme");
 
     document.getElementById("toggle-theme").addEventListener("click", function () {
         const currentTheme = localStorage.getItem('theme') || 'dark';

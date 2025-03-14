@@ -15,7 +15,9 @@ const urlsToCache = [
   "./manifest.json",
   "./src/assets/img/mobile.png",
   "./src/assets/img/pc.png",
-  "./src/assets/all.min.css"
+  "./src/assets/all.min.css",
+  "./src/assets/tools.js",
+  "./src/assets/toolsCota.js"
 ];
 
 const OFFLINE_PAGE = './offline.html';

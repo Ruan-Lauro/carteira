@@ -61,24 +61,24 @@
             </div>
         </header>
         <main class="flex flex-col self-center mt-10 w-auto" >
-            <section class="flex flex-col bg-background-200 w-[1200px] rounded-[10px] pt-4" >
-                <h2 class="text-text-200 font-semibold text-[36px] ml-24" >Calculadora de Juros Compostos</h2>
-                <div class="flex flex-wrap text-text-100 text-[20px] mt-5 gap-10 justify-center" >
-                    <div class="flex flex-col  w-[40%]" >
+            <section class="flex flex-col bg-background-200 w-[1200px] rounded-[10px] pt-4 max-3xl:w-[800px] max-4xl:w-full" >
+                <h2 class="text-text-200 font-semibold text-[36px] ml-24 max-sm:text-[22px]" >Calculadora de Juros Compostos</h2>
+                <div class="flex flex-wrap text-text-100 text-[20px] mt-5 gap-10 justify-center " >
+                    <div class="flex flex-col  w-[40%] min-w-[280px]" >
                         <label for="valueInitial">Valor Inicial</label>
                         <div class="flex mt-3" >
                             <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >R$</p>
                             <input step="0.01" type="number" name="valueInitial" class="bg-white  rounded-br-[5px]  rounded-tr-[5px] h-[45px] text-black pl-1 focus:outline-none w-full">
                         </div>
                     </div>
-                    <div class="flex flex-col  w-[40%]" >
+                    <div class="flex flex-col  w-[40%] min-w-[280px]" >
                         <label for="valueInitial">Valor Mensal</label>
                         <div class="flex mt-3" >
                             <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >R$</p>
                             <input step="0.01" type="number" name="valueInitial" class="bg-white  rounded-br-[5px] rounded-tr-[5px] h-[45px] text-black pl-1 focus:outline-none w-full">
                         </div>
                     </div>
-                    <div class="flex flex-col  w-[40%]" >
+                    <div class="flex flex-col  w-[40%] min-w-[280px]" >
                         <label for="valueInitial">Taxa de Juros</label>
                         <div class="flex mt-3" >
                             <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >%</p>
@@ -90,7 +90,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="flex flex-col  w-[40%]" >
+                    <div class="flex flex-col  w-[40%] min-w-[280px]" >
                         <label for="valueInitial">Período</label>
                         <div class="flex mt-3" >
                             <input step="0.01" type="number" name="valueInitial" class="bg-white pl-1 h-[45px] text-black pl-1 focus:outline-none rounded-bl-[5px] rounded-tl-[5px] w-full">
@@ -104,30 +104,114 @@
                 </div>
                 <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold mr-24 mb-8" id="addTrasaction">Registrar</button>
             </section>
-            <section class="flex flex-col bg-background-200 w-[1160px] rounded-[10px] pt-4 mt-20 self-center" >
-                <h2 class="text-text-200 font-semibold text-[36px] ml-14 mb-5" >Calculadora de Juros Compostos</h2>
-                <div class="flex w-full justify-around px-8 mb-5" >
-                    <div class="flex flex-col items-center text-text-100 justify-center bg-background-300 text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]" >
+            <section class="flex flex-col bg-background-200 w-[1160px] rounded-[10px] pt-4 mt-20 self-center max-3xl:w-[800px] max-4xl:w-full">
+                <h2 class="text-text-200 font-semibold text-[36px] ml-14 mb-5 max-4xl:text-center max-4xl:ml-0 max-sm:text-[22px]">Calculadora de Juros Compostos</h2>
+                <div class="flex w-full justify-around px-8 mb-8 max-4xl:flex-col max-4xl:gap-3 max-4xl:justify-center  max-4xl:items-center">
+                    <div class="flex flex-col max-4xl:min-w-[70%] min-h-[183px] items-center text-[#e5e9f0] justify-center bg-[#5e81ac] text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]">
                         <p>Valor total final</p>
-                        <p>R$ 37.206,99</p>
+                        <p id="valorTotalFinal">R$ 0,00</p>
                     </div>
-                    <div class="flex flex-col items-center text-text-100 justify-center border-background-300 border-[1px] text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]" >
-                        <p>Valor total final</p>
-                        <p>R$ 37.206,99</p>
+                    <div class="flex flex-col max-4xl:min-w-[70%] min-h-[183px] items-center text-[#5e81ac] justify-center border-background-300 border-[1px] text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]">
+                        <p class="text-center" >Valor total investido</p>
+                        <p id="valorTotalInvestido">R$ 0,00</p>
                     </div>
-                    <div class="flex flex-col items-center text-text-100 justify-center border-background-300 border-[1px] text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]" >
+                    <div class="flex flex-col max-4xl:min-w-[70%] min-h-[183px] items-center text-[#5e81ac] justify-center border-background-300 border-[1px] text-[26px] font-bold gap-2 py-7 w-[30%] rounded-[10px]">
                         <p>Total em juros</p>
-                        <p>R$ 37.206,99</p>
+                        <p id="totalJuros">R$ 0,00</p>
                     </div>
                 </div>
-                <div class="flex bg-background-300 text-[26px] font-bold h-20 w-[420px] items-center justify-center rounded-[10px] self-center" >
-                    <p class="w-[48%] py-3 rounded-[10px] text-center bg-background- text-[#5e81ac] bg-background-100" >Tabela</p>
-                    <p class="w-[48%] py-3 rounded-[10px] text-center text-[#d8dee9]" >Gráfico</p>
+                <div class="flex bg-background-300 text-[26px] font-bold h-20 w-[420px] items-center justify-center rounded-[10px] self-center max-sm:w-full">
+                    <p id="botaoTabela" class="w-[48%] py-3 rounded-[10px] text-center bg-background-100 text-[#5e81ac] cursor-pointer">Tabela</p>
+                    <p id="botaoGrafico" class="w-[48%] py-3 rounded-[10px] text-center text-[#d8dee9] cursor-pointer">Gráfico</p>
+                </div>
+                <div id="tabelaContainer" class="w-[80%] mt-16 mx-auto text-[#d8dee9] mb-14 max-4xl:w-full">
+                    <div class="overflow-auto pb-4 relative h-[350px]">
+                        <table class="w-full bg-background-100 rounded-lg overflow-hidden shadow-lg absolute">
+                            <thead>
+                                <tr class="bg-background-300 text-2xl max-sm:text-[20px]">
+                                    <th class="py-3 px-4 text-left">Mês</th>
+                                    <th class="py-3 px-4 text-left">Juros</th>
+                                    <th class="py-3 px-4 text-left">Total aportado</th>
+                                    <th class="py-3 px-4 text-left">Total juros</th>
+                                    <th class="py-3 px-4 text-left">Total acumulado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaResultados">
+                                <!-- Conteúdo da tabela -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="graficoContainer" class="w-[80%] mt-16 mx-auto text-text-100 hidden mb-14">
+                    <div class="bg-background-100 rounded-lg overflow-hidden shadow-lg p-6 h-96 ">
+                        <canvas id="graficoResultados"></canvas>
+                    </div>
+                </div>
+            </section>
+            <section class="bg-background-200 p-8 rounded-lg shadow-md w-[1000px] mt-14 self-center flex flex-col max-3xl:w-[800px] max-4xl:w-full">
+                
+                <div class="flex items-center justify-between max-4xl:flex-col" >
+                    <div class="mb-4 max-4xl:w-[80%] text-text-100 flex flex-col w-[19%] ">
+                        <label for="amount" class="block  font-semibold mb-2">Valor</label>
+                        <input type="number" id="amount" class="w-full p-2 border border-gray-300 rounded h-[50px] bg-white text-[black] " value="6.49">
+                    </div>
+                    
+                    <div class="mb-4 max-4xl:w-[80%] text-text-100 flex flex-col w-[29%] ">
+                        <label for="fromCurrency" class="block  font-semibold mb-2">Converter de</label>
+                        <select id="fromCurrency" class="w-full p-2 border border-gray-300 rounded h-[50px] bg-white text-[black] ">
+                            <option value="brl">Real (BRL)</option>
+                            <option value="usd">Dólar dos Estados Unidos (USD)</option>
+                            <option value="eur">Euro (EUR)</option>
+                            <option value="gbp">Libra Esterlina (GBP)</option>
+                            <option value="btc">Bitcoin (BTC)</option>
+                            <option value="doge">Dogecoin (DOGE)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4 max-4xl:w-[80%] text-text-100 flex flex-col w-[48%] ">
+                        <label for="toCurrency" class="block  font-semibold mb-2">Para</label>
+                        <select id="toCurrency" class="w-full p-2 border border-gray-300 rounded h-[50px] bg-white text-[black] ">
+                            <option value="usd">Dólar dos Estados Unidos (USD)</option>
+                            <option value="brl">Real (BRL)</option>
+                            <option value="eur">Euro (EUR)</option>
+                            <option value="gbp">Libra Esterlina (GBP)</option>
+                            <option value="btc">Bitcoin (BTC)</option>
+                            <option value="doge">Dogecoin (DOGE)</option>
+                        </select>
+                    </div>
+                    
+                </div>
+
+                <button id="convertBtn" class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px]  mt-7 cursor-pointer text-[20px] font-semibold self-end max-4xl:self-center">
+                    Converter
+                </button>
+                
+                <div id="result" class="mt-6 hidden">
+                    <div class="bg-background-300 text-text-100 p-4 rounded text-center">
+                        <p id="resultText" class="text-lg font-semibold"></p>
+                        <p id="exchangeRate" class="text-sm mt-2"></p>
+                    </div>
+                </div>
+                
+                <div id="loading" class="mt-6 hidden">
+                    <div class="bg-background-300 text-text-100 p-4 rounded text-center">
+                        <p class="text-lg">Carregando...</p>
+                    </div>
+                </div>
+                
+                <div id="error" class="mt-6 hidden">
+                    <div class="bg-red-500 text-text-100 p-4 rounded text-center">
+                        <p id="errorText" class="text-lg"></p>
+                    </div>
                 </div>
             </section>
             
         </main>
     </main>
     <script type="module" src="/src/assets/js/main.js"></script>
+    <script type="module" src="/src/assets/js/tools.js"></script>
+    <script type="module" src="/src/assets/js/toolsCota.js"></script>
+    <script type="module" src="/src/assets/js/transation.js"></script>
   </body>
 </html>
