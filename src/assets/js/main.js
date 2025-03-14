@@ -1,10 +1,10 @@
-// if ("serviceWorker" in navigator) {
-//     window.addEventListener("load", () => {
-//       navigator.serviceWorker.register("/sw.js")
-//         .then((reg) => console.log("Service Worker registrado!", reg))
-//         .catch((err) => console.log("Erro ao registrar o Service Worker", err));
-//     });
-// }  
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js")
+        .then((reg) => console.log("Service Worker registrado!", reg))
+        .catch((err) => console.log("Erro ao registrar o Service Worker", err));
+    });
+}  
 
 function formatDate() {
     const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
