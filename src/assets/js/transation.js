@@ -88,13 +88,12 @@ document.addEventListener('DOMContentLoaded', dataTrasacao);
 
 const moneyMenu = () => {
     const listTransaction = JSON.parse(localStorage.getItem('listTransaction')) || [];
+    const moneyMenu = document.getElementById('money');
     if (listTransaction.length === 0){
         moneyMenu.style.color = '#27f53c';
         moneyMenu.innerText = `0 R$`;
         return;
     };
-
-    const moneyMenu = document.getElementById('money');
 
     if (moneyMenu) {
         let money = 0;
