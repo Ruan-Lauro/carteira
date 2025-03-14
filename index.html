@@ -53,10 +53,10 @@
               </svg>
               <div class="flex gap-3 h-[80px]">
                   <div class="text-text-100 flex flex-col items-end">
-                      <p class="text-[25px]">Julius Rock</p>
-                      <p class="text-text-200" id="online">Plano gratuito</p>
+                      <p class="text-[25px]" id="nameUser">Julius Rock</p>
+                      <p class="text-text-200" id="online">online</p>
                   </div>
-                  <img src="src/assets/img/julius.png" alt="imagem de perfil" class="w-[80px] rounded-full object-cover">
+                  <img src="src/assets/img/julius.png" alt="imagem de perfil" id="imgUser" class="w-[80px] rounded-full object-cover cursor-pointer">
               </div>
           </div>
       </header>
@@ -86,7 +86,11 @@
                   </select>
                 </div>
               </div>
-              <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="addTrasaction">Registrar</button>
+              <div>
+                <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="addTrasaction">Registrar</button>
+                <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="import">Importar</button>
+                <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="export">Exportar</button>
+              </div>
             </form>
             <div  class="flex flex-col bg-background-200 w-[560px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] h-[500px] max-3xl:w-[800px] max-4xl:w-full" >
               <h2 class="text-text-200 font-semibold text-[26px] mb-2" >Transações</h2>

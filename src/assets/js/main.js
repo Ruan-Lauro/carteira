@@ -12,20 +12,23 @@ if ('serviceWorker' in navigator) {
 
 localStorage.setItem('theme', 'dark');
 
-async function checkSiteStatus(url) {
+function checkInternetConnection() {
     const pElement = document.getElementById("online");
-    try {
-        const response = await fetch(url, { mode: "no-cors" });
-        pElement.textContent = "Site Online";
+
+    if (navigator.onLine) {
+        pElement.textContent = "online";
         pElement.style.color = "green";
-    } catch (error) {
-        pElement.textContent = "Site Offline";
+    } else {
+        pElement.textContent = "offline";
         pElement.style.color = "red";
     }
 }
 
-checkSiteStatus("https://carteira-contas.netlify.app/");
-  
+checkInternetConnection();
+
+window.addEventListener("online", checkInternetConnection);
+window.addEventListener("offline", checkInternetConnection);
+
 function formatDate() {
     const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -162,4 +165,42 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const imgUser = document.getElementById("imgUser");
+    const nameUser = document.getElementById("nameUser");
+
+    if (localStorage.getItem("profileImage")) {
+        imgUser.src = localStorage.getItem("profileImage");
+    }
+    if (localStorage.getItem("userName")) {
+        nameUser.textContent = localStorage.getItem("userName");
+    }
+
+    imgUser.addEventListener("click", function () {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.addEventListener("change", function () {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imgUser.src = e.target.result;
+                    localStorage.setItem("profileImage", e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        input.click();
+    });
+
+    nameUser.addEventListener("click", function () {
+        const newName = prompt("Digite o novo nome:", nameUser.textContent);
+        if (newName) {
+            nameUser.textContent = newName;
+            localStorage.setItem("userName", newName);
+        }
+    });
 });
