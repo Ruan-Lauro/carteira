@@ -11,9 +11,10 @@ export default defineConfig({
         { src: "src/assets/js/*.js", dest: "src/assets" },
         { src: "src/assets/css/*.css", dest: "src/assets" },
         { src: "src/assets/img/**/*", dest: "src/assets/img" },
+        { src: "src/assets/webfonts/**/*", dest: "src/assets/webfonts" },
         { src: "public/sw.js", dest: "" },
         { src: "public/manifest.json", dest: "" },
-        { src: "public/offline.html", dest: "" }
+        { src: "public/offline.html", dest: "" },
       ]
     })
   ],
