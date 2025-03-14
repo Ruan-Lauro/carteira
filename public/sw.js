@@ -1,20 +1,20 @@
 const CACHE_NAME = "site-cache-v1";
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/src/pages/tools.html",
-  "/src/assets/css/style.css",
-  "/src/assets/js/main.js",
-  "/src/assets/js/addCategory.js",
-  "/src/assets/js/cota.js",
-  "/src/assets/js/dataMoney.js",
-  "/src/assets/js/transation.js",
-  "/src/assets/img/android-chrome-192x192.png",
-  "/src/assets/img/android-chrome-512x512.png",
-  "/manifest.json",
-  "/src/assets/img/mobile.png",
-  "/src/assets/img/pc.png",
-  "/offline.html"
+  "./",
+  "./index.html",
+  "./src/pages/tools.html",
+  "./src/assets/style.css",
+  "./src/assets/main.js",
+  "./src/assets/addCategory.js",
+  "./src/assets/cota.js",
+  "./src/assets/dataMoney.js",
+  "./src/assets/transation.js",
+  "./src/assets/img/android-chrome-192x192.png",
+  "./src/assets/img/android-chrome-512x512.png",
+  "./manifest.json",
+  "./src/assets/img/mobile.png",
+  "./src/assets/img/pc.png",
+  "./offline.html"
 ];
 
 const OFFLINE_PAGE = './offline.html';
