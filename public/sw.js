@@ -2,6 +2,7 @@ const CACHE_NAME = "site-cache-v1";
 const urlsToCache = [
   "./",
   "./index.html",
+  "./offline.html",
   "./src/pages/tools.html",
   "./src/assets/style.css",
   "./src/assets/main.js",
@@ -14,7 +15,6 @@ const urlsToCache = [
   "./manifest.json",
   "./src/assets/img/mobile.png",
   "./src/assets/img/pc.png",
-  "./offline.html",
   "./src/assets/all.min.css"
 ];
 
