@@ -1,10 +1,15 @@
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js")
-        .then((reg) => console.log("Service Worker registrado!", reg))
-        .catch((err) => console.log("Erro ao registrar o Service Worker", err));
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registration successful:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
     });
-}  
+  }
+  
 function formatDate() {
     const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -66,22 +71,26 @@ async function getWeatherData(latitude, longitude, city) {
     }
 }
 
+
 async function initApp() {
-    
     document.getElementById('current-date').textContent = formatDate();
 
     let locationData;
+    let weatherData = { temperature: '--', cityName: 'Localização indisponível' };
 
     try {
-   
         locationData = await getCityByGeolocation();
+        console.log("Localização:", locationData.city);
+        
+        weatherData = await getWeatherData(
+            locationData.latitude, 
+            locationData.longitude, 
+            locationData.city
+        );
     } catch (error) {
         console.warn("Geolocalização falhou:", error);
+       
     }
-
-    console.log("Localização:", locationData.city);
-    
-    const weatherData = await getWeatherData(locationData.latitude, locationData.longitude, locationData.city);
 
     document.getElementById('city-name').textContent = weatherData.cityName;
     document.getElementById('temperature').textContent = `${weatherData.temperature}º`;
