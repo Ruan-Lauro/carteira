@@ -11,6 +11,20 @@ if ('serviceWorker' in navigator) {
 }
 
 localStorage.setItem('theme', 'dark');
+
+async function checkSiteStatus(url) {
+    const pElement = document.getElementById("online");
+    try {
+        const response = await fetch(url, { mode: "no-cors" });
+        pElement.textContent = "Site Online";
+        pElement.style.color = "green";
+    } catch (error) {
+        pElement.textContent = "Site Offline";
+        pElement.style.color = "red";
+    }
+}
+
+checkSiteStatus("http://192.168.18.176:5173/");
   
 function formatDate() {
     const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
