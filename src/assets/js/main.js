@@ -24,7 +24,7 @@ async function checkSiteStatus(url) {
     }
 }
 
-checkSiteStatus("http://192.168.18.176:5173/");
+checkSiteStatus("https://carteira-contas.netlify.app/");
   
 function formatDate() {
     const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
