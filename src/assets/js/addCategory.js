@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     let selectedColor = '#1e7fd6';
     let selectedIcon = 'fa-cat';
@@ -84,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             dataCategory();
             alert('Categoria criada com sucesso!');
+            location.reload();
         });
     }
   

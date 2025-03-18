@@ -118,11 +118,46 @@ async function initApp() {
 document.addEventListener('DOMContentLoaded', initApp);
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Verificar e aplicar o tema salvo quando a página carrega
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
 
     document.getElementById("toggle-theme").addEventListener("click", function () {
         const currentTheme = localStorage.getItem('theme') || 'dark';
         toggleTheme(currentTheme);
     });
+
+    // Função para aplicar o tema sem alternar
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            // Aplicar classes para tema claro
+            replaceClassForElements(".bg-background-200", "bg-background-500");
+            replaceClassForElements(".bg-background-100", "bg-background-400");
+            replaceClassForElements(".text-text-100", "text-text-300");
+            replaceClassForElements(".text-text-200", "text-text-400");
+            toggleThemeIcon("light");
+        } else {
+            // Aplicar classes para tema escuro
+            replaceClassForElements(".bg-background-500", "bg-background-200");
+            replaceClassForElements(".bg-background-400", "bg-background-100");
+            replaceClassForElements(".text-text-300", "text-text-100");
+            replaceClassForElements(".text-text-400", "text-text-200");
+            toggleThemeIcon("dark");
+        }
+    }
+
+    // Função para substituir classes sem alternar
+    function replaceClassForElements(selector, newClass) {
+        const elements = document.querySelectorAll(selector);
+        if (elements) {
+            elements.forEach(el => {
+                if (el.classList.contains(selector.substring(1))) {
+                    el.classList.remove(selector.substring(1));
+                    el.classList.add(newClass);
+                }
+            });
+        }
+    }
 
     function toggleTheme(value) {
         if (value === 'dark') {
@@ -130,6 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleClassForElements(".bg-background-100", "bg-background-400", "bg-background-100");
             toggleClassForElements(".text-text-100", "text-text-300", "text-text-100");
             toggleClassForElements(".text-text-200", "text-text-400", "text-text-200");
+            localStorage.removeItem('theme');
             localStorage.setItem('theme', 'light');
             toggleThemeIcon("light");
         } else if (value === 'light') {
@@ -137,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleClassForElements(".bg-background-400", "bg-background-100", "bg-background-400");
             toggleClassForElements(".text-text-300", "text-text-100", "text-text-300");
             toggleClassForElements(".text-text-400", "text-text-200", "text-text-400");
+            localStorage.removeItem('theme');
             localStorage.setItem('theme', 'dark');
             toggleThemeIcon("dark");
         }
@@ -164,7 +201,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </svg>`;
         }
     }
-
 });
 
 document.addEventListener("DOMContentLoaded", function () {
