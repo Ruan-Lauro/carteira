@@ -14,7 +14,7 @@ function checkInternetConnection() {
     const pElement = document.getElementById("online");
 
     function checkActiveConnection() {
-        return fetch('http://localhost:5173/favicon.ico', { 
+        return fetch('https://carteira-contas.netlify.app/favicon.ico', { 
             mode: 'no-cors',
             cache: 'no-store',
             method: 'HEAD',
