@@ -13,13 +13,22 @@ if ('serviceWorker' in navigator) {
 function checkInternetConnection() {
     const pElement = document.getElementById("online");
 
-    if (navigator.onLine) {
-        pElement.textContent = "online";
-        pElement.style.color = "green";
-    } else {
-        pElement.textContent = "offline";
-        pElement.style.color = "red";
+    function updateStatus() {
+        if (navigator.onLine) {
+            pElement.textContent = "online";
+            pElement.style.color = "green";
+        } else {
+            pElement.textContent = "offline";
+            pElement.style.color = "red";
+        }
     }
+
+    // Verificação inicial
+    updateStatus();
+
+    // Adiciona event listeners para detectar mudanças
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
 }
 
 checkInternetConnection();
