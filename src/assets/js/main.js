@@ -10,8 +10,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-localStorage.setItem('theme', 'dark');
-
 function checkInternetConnection() {
     const pElement = document.getElementById("online");
 
@@ -52,6 +50,7 @@ async function getCityByGeolocation() {
                         const response = await fetch(`https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&format=json&api_key=67cb5cda5738f625118564tdo320fcc`);
                         const data = await response.json();
                         if (data.address && data.address.city) {
+                            localStorage.setItem('city',JSON.stringify({ city: data.address.city, latitude, longitude }));
                             resolve({ city: data.address.city, latitude, longitude });
                         } else {
                             reject("Cidade não encontrada.");
@@ -76,17 +75,31 @@ async function getWeatherData(latitude, longitude, city) {
 
         const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&timezone=auto`);
         const weatherData = await weatherResponse.json();
-
+        localStorage.setItem('temper',JSON.stringify({ temperature: Math.round(weatherData.current.temperature_2m),
+            cityName: city }));
         return {
             temperature: Math.round(weatherData.current.temperature_2m),
             cityName: city
         };
     } catch (error) {
         console.error('Erro ao obter dados meteorológicos:', error);
-        return {
-            temperature: '--',
-            cityName: city
-        };
+        const elements = JSON.parse(localStorage.getItem('temper'));
+
+        if(elements){
+            
+            return {
+                temperature: elements.temperature,
+                cityName: elements.cityName
+            };
+        }else{
+            return {
+                temperature: '--',
+                cityName: city
+            }
+        }
+        
+       
+        
     }
 }
 
@@ -99,7 +112,6 @@ async function initApp() {
 
     try {
         locationData = await getCityByGeolocation();
-        console.log("Localização:", locationData.city);
         
         weatherData = await getWeatherData(
             locationData.latitude, 
@@ -107,8 +119,18 @@ async function initApp() {
             locationData.city
         );
     } catch (error) {
+        locationData = JSON.parse(localStorage.getItem('city')); 
+        if(locationData){
+  
+            weatherData = await getWeatherData(
+                locationData.latitude, 
+                locationData.longitude, 
+                locationData.city
+            );
+        }
         console.warn("Geolocalização falhou:", error);
        
+        
     }
 
     document.getElementById('city-name').textContent = weatherData.cityName;
@@ -118,26 +140,26 @@ async function initApp() {
 document.addEventListener('DOMContentLoaded', initApp);
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Verificar e aplicar o tema salvo quando a página carrega
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    
+    const savedTheme = localStorage.getItem('theme');
     applyTheme(savedTheme);
 
     document.getElementById("toggle-theme").addEventListener("click", function () {
-        const currentTheme = localStorage.getItem('theme') || 'dark';
+        const currentTheme = localStorage.getItem('theme');
         toggleTheme(currentTheme);
     });
 
-    // Função para aplicar o tema sem alternar
+    
     function applyTheme(theme) {
         if (theme === 'light') {
-            // Aplicar classes para tema claro
+            
             replaceClassForElements(".bg-background-200", "bg-background-500");
             replaceClassForElements(".bg-background-100", "bg-background-400");
             replaceClassForElements(".text-text-100", "text-text-300");
             replaceClassForElements(".text-text-200", "text-text-400");
             toggleThemeIcon("light");
         } else {
-            // Aplicar classes para tema escuro
+          
             replaceClassForElements(".bg-background-500", "bg-background-200");
             replaceClassForElements(".bg-background-400", "bg-background-100");
             replaceClassForElements(".text-text-300", "text-text-100");
@@ -146,7 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Função para substituir classes sem alternar
     function replaceClassForElements(selector, newClass) {
         const elements = document.querySelectorAll(selector);
         if (elements) {
@@ -165,7 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleClassForElements(".bg-background-100", "bg-background-400", "bg-background-100");
             toggleClassForElements(".text-text-100", "text-text-300", "text-text-100");
             toggleClassForElements(".text-text-200", "text-text-400", "text-text-200");
-            localStorage.removeItem('theme');
             localStorage.setItem('theme', 'light');
             toggleThemeIcon("light");
         } else if (value === 'light') {
@@ -173,7 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleClassForElements(".bg-background-400", "bg-background-100", "bg-background-400");
             toggleClassForElements(".text-text-300", "text-text-100", "text-text-300");
             toggleClassForElements(".text-text-400", "text-text-200", "text-text-400");
-            localStorage.removeItem('theme');
             localStorage.setItem('theme', 'dark');
             toggleThemeIcon("dark");
         }
