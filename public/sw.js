@@ -56,13 +56,18 @@ self.addEventListener("fetch", (event) => {
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
-  
+
+  // Se não for uma requisição GET, não faz nada
+  if (event.request.method !== "GET") {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-    
+
       const fetchPromise = fetch(event.request)
         .then((networkResponse) => {
-        
+
           if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
             const responseToCache = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
@@ -72,7 +77,7 @@ self.addEventListener("fetch", (event) => {
           return networkResponse;
         })
         .catch(() => {
-          
+
           if (event.request.headers.get('accept').includes('text/html')) {
             return caches.match(OFFLINE_PAGE);
           }
