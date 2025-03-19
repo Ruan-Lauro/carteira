@@ -88,13 +88,12 @@
               </div>
               <div>
                 <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="addTrasaction">Registrar</button>
-                <!-- <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="import">Importar</button>
-                <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="export">Exportar</button> -->
+                <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="SeeUploadJson" type="button">Baixar</button>
               </div>
             </form>
             <div  class="flex flex-col bg-background-200 w-[560px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] h-[500px] max-3xl:w-[800px] max-4xl:w-full" >
               <h2 class="text-text-200 font-semibold text-[26px] mb-2" >Transações</h2>
-              <div id="showTransaction" class="h-[415px] mt-1 overflow-y-auto my-scrollbar" >
+              <div id="showTransaction" class="h-[415px] mt-1 overflow-y-auto my-scrollbar text-text-100" >
 
               </div>
             </div>
@@ -114,7 +113,7 @@
                 <div id="expense-chart" class="h-68 flex mb-4 space-x-2"></div>
                 
   
-                <div id="chart-legend" class="flex flex-wrap gap-5 text-sm mt-10 "></div>
+                <div id="chart-legend" class="flex flex-wrap gap-5 text-sm mt-10 text-text-100"></div>
               </div>
             </div>
             <div class="flex flex-col gap-5 3xl:ml-[2.9%] max-4xl:w-full" >
@@ -126,7 +125,7 @@
               </div>
               <div  class="flex flex-col bg-background-200 w-[400px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] h-[500px] justify-between max-4xl:w-full" >
                 <h2 class="text-text-200 font-semibold text-[26px]" >Categorias</h2>
-                <div id="showCategory" class="h-[350px] mt-4 overflow-y-auto my-scrollbar" >
+                <div id="showCategory" class="h-[350px] mt-4 overflow-y-auto my-scrollbar text-text-100" >
                   
                 </div>
                 <button class="justify-self-end text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] mt-7 cursor-pointer text-[20px] font-semibold self-end" id="buttonAddCategory" >Criar Nova</button>
@@ -212,6 +211,36 @@
               Criar nova categoria
             </button>
           </div>
+        </div>
+        <div class="w-full h-[100vh] fixed bg-background-100/70 items-center justify-center hidden" id="divUploadJson">
+          <div class="relative bg-background-100 rounded-lg shadow-md p-6 max-w-2xl mx-auto max-sm:w-full max-sm:h-full max-sm:rounded-none">
+              <h1 class="text-2xl font-bold text-text-200 mb-6">Gerenciador de Dados LocalStorage</h1>
+              <p class="absolute text-text-400 font-bold right-3 top-5 cursor-pointer text-2xl" id="exitUploadJson" >X</p>
+              <div class="mb-8 pb-6">
+                  <h2 class="text-xl font-semibold text-text-400 mb-4">Download de Dados</h2>
+                  <p class="text-text-100 mb-4">Baixe seus dados de transações e categorias do localStorage, lembrando que é baixado os dois juntos, pois funcionam juntos.</p>
+                  <div class="flex flex-wrap gap-3">
+                      <button id="downloadBoth" class="bg-background-300 hover:bg-background-300/70 cursor-pointer text-white px-4 py-2 rounded-md transition">
+                          Baixar Ambos
+                      </button>
+                  </div>
+              </div>
+              
+              <div class="mb-8 pb-6">
+                  <h2 class="text-xl font-semibold text-text-400 mb-4">Upload de Dados</h2>
+                  <p class="text-text-100 mb-4">Faça upload dos seus arquivos JSON para restaurar seus dados.</p>
+                  
+                  <div class="mb-4">
+                      <label for="fileInput" class="block text-text-400 mb-2">Selecione um ou mais arquivos JSON:</label>
+                      <input type="file" id="fileInput" multiple accept=".json" 
+                          class="block w-full text-text-400 border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  </div>
+                  
+                  <button id="uploadButton" class="bg-background-300 hover:bg-background-300/70 cursor-pointer text-white px-4 py-2 rounded-md transition">
+                      Carregar Arquivos
+                  </button>
+              </div>
+        </div>
         </div>
       
     </main>

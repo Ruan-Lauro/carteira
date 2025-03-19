@@ -187,31 +187,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
     function applyTheme(theme) {
         if (theme === 'light') {
-            
-            replaceClassForElements(".bg-background-200", "bg-background-500");
-            replaceClassForElements(".bg-background-100", "bg-background-400");
-            replaceClassForElements(".text-text-100", "text-text-300");
-            replaceClassForElements(".text-text-200", "text-text-400");
-            toggleThemeIcon("light");
+            toggleTheme('dark');
         } else {
-          
-            replaceClassForElements(".bg-background-500", "bg-background-200");
-            replaceClassForElements(".bg-background-400", "bg-background-100");
-            replaceClassForElements(".text-text-300", "text-text-100");
-            replaceClassForElements(".text-text-400", "text-text-200");
-            toggleThemeIcon("dark");
-        }
-    }
-
-    function replaceClassForElements(selector, newClass) {
-        const elements = document.querySelectorAll(selector);
-        if (elements) {
-            elements.forEach(el => {
-                if (el.classList.contains(selector.substring(1))) {
-                    el.classList.remove(selector.substring(1));
-                    el.classList.add(newClass);
-                }
-            });
+            toggleTheme('light');
         }
     }
 
@@ -293,4 +271,198 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("userName", newName);
         }
     });
+});
+
+function downloadLocalStorageItem(key, filename) {
+    try {
+        const data = localStorage.getItem(key);
+        if (!data) {
+            alert(`Nenhum dado encontrado para ${key} no localStorage`);
+            return null;
+        }
+        
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename || `${key}.json`;
+        document.body.appendChild(a);
+        a.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
+        
+        return data;
+    } catch (error) {
+        console.error(`Erro ao baixar ${key}:`, error);
+        alert(`Erro ao baixar ${key}: ${error.message}`);
+        return null;
+    }
+}
+
+function downloadMultipleItems(keys, filename) {
+    try {
+        const data = {};
+        let hasData = false;
+        
+        keys.forEach(key => {
+            const item = localStorage.getItem(key);
+            if (item) {
+                try {
+                    data[key] = JSON.parse(item);
+                    hasData = true;
+                } catch (e) {
+                    data[key] = item;
+                    hasData = true;
+                }
+            }
+        });
+        
+        if (!hasData) {
+            alert('Nenhum dado encontrado no localStorage para as chaves especificadas');
+            return;
+        }
+        
+        const jsonData = JSON.stringify(data, null, 2);
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename || 'localStorage_backup.json';
+        document.body.appendChild(a);
+        a.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
+    } catch (error) {
+        console.error('Erro ao baixar múltiplos itens:', error);
+        alert(`Erro ao baixar os dados: ${error.message}`);
+    }
+}
+
+function saveToLocalStorage(jsonData, keyPrefix = '') {
+    try {
+        if (typeof jsonData === 'object' && !Array.isArray(jsonData)) {
+            let saved = 0;
+            
+            for (const key in jsonData) {
+                if (Object.hasOwnProperty.call(jsonData, key)) {
+                    const storageKey = keyPrefix ? `${keyPrefix}_${key}` : key;
+                    const value = jsonData[key];
+                    
+                    localStorage.setItem(
+                        storageKey, 
+                        typeof value === 'object' ? JSON.stringify(value) : value
+                    );
+                    saved++;
+                }
+            }
+            
+            return saved;
+        } else {
+           
+            if (keyPrefix) {
+                localStorage.setItem(
+                    keyPrefix, 
+                    typeof jsonData === 'object' ? JSON.stringify(jsonData) : jsonData
+                );
+                return 1;
+            } else {
+                console.error('Não foi possível salvar os dados: chave não especificada para dados não estruturados');
+                return 0;
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao salvar no localStorage:', error);
+        alert(`Erro ao salvar no localStorage: ${error.message}`);
+        return 0;
+    }
+}
+
+function readJSONFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            try {
+                const jsonData = JSON.parse(event.target.result);
+                resolve({
+                    filename: file.name,
+                    data: jsonData
+                });
+            } catch (e) {
+                reject(`Erro ao analisar o arquivo ${file.name}: ${e.message}`);
+            }
+        };
+        
+        reader.onerror = function() {
+            reject(`Erro ao ler o arquivo ${file.name}`);
+        };
+        
+        reader.readAsText(file);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('downloadBoth').addEventListener('click', function() {
+        downloadMultipleItems(['listTransaction', 'listCategory'], 'financial_data.json');
+    });
+    
+    document.getElementById('uploadButton').addEventListener('click', function() {
+        const fileInput = document.getElementById('fileInput');
+        const files = fileInput.files;
+        
+        if (files.length === 0) {
+            alert('Por favor, selecione pelo menos um arquivo para upload.');
+            return;
+        }
+        
+        const promises = [];
+        
+        for (let i = 0; i < files.length; i++) {
+            promises.push(readJSONFile(files[i]));
+        }
+        
+        Promise.all(promises)
+            .then(results => {
+                let totalSaved = 0;
+                
+                results.forEach(result => {
+                    let keyPrefix = '';
+                    if (result.filename.includes('transaction')) {
+                        keyPrefix = 'listTransaction';
+                    } else if (result.filename.includes('categor')) {
+                        keyPrefix = 'listCategory';
+                    } else if (result.filename.includes('financial')) {
+                        keyPrefix = '';
+                    }
+                    
+                    const saved = saveToLocalStorage(result.data, keyPrefix);
+                    totalSaved += saved;
+                });
+                
+                alert(`${totalSaved} itens foram salvos no localStorage com sucesso!`);
+                document.getElementById('divUploadJson').style.display = 'none';
+            })
+            .catch(error => {
+                alert(`Erro ao processar arquivos: ${error}`);
+            });
+    });
+    
+    document.getElementById('exitUploadJson').addEventListener('click', function() {
+        document.getElementById('divUploadJson').style.display = 'none';
+    });
+    
+    const seeUploadBtn = document.getElementById('SeeUploadJson');
+    if (seeUploadBtn) {
+        seeUploadBtn.addEventListener('click', function() {
+            document.getElementById('divUploadJson').style.display = 'flex';
+        });
+    }
 });

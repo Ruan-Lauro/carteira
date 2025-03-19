@@ -141,10 +141,10 @@ const dataCategory = () => {
   
     htmlCategory.innerHTML = listCategory.map(cat => `
         <div class="flex items-center gap-5 mb-5 max-5xl:gap-3">
-            <div class="flex items-center justify-center w-13 h-13 rounded-full text-text-100" style="background-color: ${cat.color};">
+            <div class="flex items-center justify-center w-13 h-13 rounded-full" style="background-color: ${cat.color};">
                 <i class="fas ${cat.icon} text-[28px] text-[#eceff4]"></i>
             </div>
-            <p class="text-text-100 text-[26px] font-semibold max-5xl:text-[22px]">${cat.name}</p>
+            <p class="text-[26px] font-semibold max-5xl:text-[22px]">${cat.name}</p>
         </div>
     `).join('');
 
