@@ -51,12 +51,12 @@
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-11 self-center cursor-pointer" id="toggle-theme">
                   <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
               </svg>
-              <div class="flex gap-3 h-[80px]">
+              <div class="flex gap-3 h-[80px] cursor-pointer" id="addPerfil">
                   <div class="text-text-100 flex flex-col items-end">
                       <p class="text-[25px]" id="nameUser">Julius Rock</p>
                       <p class="text-text-200" id="online">online</p>
                   </div>
-                  <img src="src/assets/img/julius.png" alt="imagem de perfil" id="imgUser" class="w-[80px] rounded-full object-cover cursor-pointer">
+                  <img src="src/assets/img/julius.png" alt="imagem de perfil" id="imgUser" class="w-[80px] rounded-full object-cover">
               </div>
           </div>
       </header>
@@ -87,8 +87,8 @@
                 </div>
               </div>
               <div>
-                <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="addTrasaction">Registrar</button>
-                <button class="text-[#eceff4] bg-background-300 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="SeeUploadJson" type="button">Baixar</button>
+                <button class="text-[#eceff4] bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="addTrasaction">Registrar</button>
+                <button class="text-[#eceff4] bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="SeeUploadJson" type="button">Configuração</button>
               </div>
             </form>
             <div  class="flex flex-col bg-background-200 w-[560px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] h-[500px] max-3xl:w-[800px] max-4xl:w-full" >
@@ -212,6 +212,7 @@
             </button>
           </div>
         </div>
+        <!-- Dowload json -->
         <div class="w-full h-[100vh] fixed bg-background-100/70 items-center justify-center hidden" id="divUploadJson">
           <div class="relative bg-background-100 rounded-lg shadow-md p-6 max-w-2xl mx-auto max-sm:w-full max-sm:h-full max-sm:rounded-none">
               <h1 class="text-2xl font-bold text-text-200 mb-6">Gerenciador de Dados LocalStorage</h1>
@@ -240,9 +241,33 @@
                       Carregar Arquivos
                   </button>
               </div>
+
+              <div class="mb-8 pb-6">
+                <h2 class="text-xl font-semibold text-text-400 mb-4">Apagar tudo</h2>
+                <p class="text-text-100 mb-4">Apagar todos os dados de categoria e transação.</p>
+                
+                <button id="deleteButton" class="bg-background-300 hover:bg-background-300/70 cursor-pointer text-white px-4 py-2 rounded-md transition">
+                    Apagar Dados
+                </button>
+            </div>
+          </div>
         </div>
+        <!-- Add Perfil -->
+        <div class="w-full h-[100vh] fixed bg-background-100/70 items-center justify-center hidden" id="perfilDiv">
+          <div class="flex flex-col items-center relative bg-background-100 rounded-lg shadow-md p-20 max-w-2xl mx-auto max-sm:w-full max-sm:h-full max-sm:rounded-none " >
+            <div class="w-full flex justify-between" >
+              <h2 class="text-text-200 font-semibold text-[28px] self-start mb-5" >Perfil</h2>  
+              <p class="text-text-400 text-[30px] cursor-pointer hover:opacity-50"  id="exitPerfil">X</p>
+            </div>
+              <img src="src/assets/img/julius.png" alt="imagem de perfil" id="imgUserEdit" class="w-[200px] h-[200px] rounded-full object-cover cursor-pointer">
+              <p class="text-text-100 my-5 text-[20px]" id="exitPerfil" >Aperte na imagem para editar</p>
+              <div class="flex flex-col w-full sm:w-[250px] text-text-100" >
+                <label for="name">Nome</label>
+                <input type="text" name="name" id="nameUserEdit" class="bg-white rounded-[5px] h-[45px] text-black pl-1 focus:outline-none">
+              </div>
+              <button class="text-[#eceff4] bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] mt-7 cursor-pointer text-[20px] font-semibold" id="addEditUser">Editar</button>
+          </div>
         </div>
-      
     </main>
     <script type="module" src="/src/assets/js/main.js"></script>
     <script type="module" src="/src/assets/js/addCategory.js"></script>

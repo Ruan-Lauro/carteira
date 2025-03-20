@@ -236,14 +236,20 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const imgUser = document.getElementById("imgUser");
-    const nameUser = document.getElementById("nameUser");
+
+    const imgUser = document.getElementById("imgUserEdit");
+    const imgUserTwo = document.getElementById("imgUser");
+    const nameUser = document.getElementById("nameUserEdit");
+    const nameUserTwo = document.getElementById("nameUser");
+
+    if(localStorage.getItem("userName")){
+        nameUserTwo.innerText = localStorage.getItem("userName");
+        nameUser.value = localStorage.getItem("userName");
+    }
 
     if (localStorage.getItem("profileImage")) {
         imgUser.src = localStorage.getItem("profileImage");
-    }
-    if (localStorage.getItem("userName")) {
-        nameUser.textContent = localStorage.getItem("userName");
+        imgUserTwo.src = localStorage.getItem("profileImage");
     }
 
     imgUser.addEventListener("click", function () {
@@ -256,21 +262,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     imgUser.src = e.target.result;
-                    localStorage.setItem("profileImage", e.target.result);
                 };
                 reader.readAsDataURL(file);
             }
         });
         input.click();
+
     });
 
-    nameUser.addEventListener("click", function () {
-        const newName = prompt("Digite o novo nome:", nameUser.textContent);
-        if (newName) {
-            nameUser.textContent = newName;
-            localStorage.setItem("userName", newName);
-        }
+    document.getElementById('addEditUser').addEventListener('click', function (){
+        const imgUser = document.getElementById("imgUserEdit");
+        const nameUser = document.getElementById("nameUserEdit");
+        localStorage.setItem("profileImage", imgUser.src);
+        localStorage.setItem("userName", nameUser.value);
+        location.reload();
     });
+
+    document.getElementById('exitPerfil').addEventListener('click', function (){
+        document.getElementById('perfilDiv').style.display = 'none';
+    });
+
+    document.getElementById('addPerfil').addEventListener('click', function (){
+        document.getElementById('perfilDiv').style.display = 'flex';
+    });
+
 });
 
 function downloadLocalStorageItem(key, filename) {
@@ -413,6 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('downloadBoth').addEventListener('click', function() {
         downloadMultipleItems(['listTransaction', 'listCategory'], 'financial_data.json');
     });
+
+    document.getElementById('deleteButton').addEventListener('click', function (){
+        localStorage.removeItem('listTransaction');
+        localStorage.removeItem('listCategory');
+        location.reload();
+    });
     
     document.getElementById('uploadButton').addEventListener('click', function() {
         const fileInput = document.getElementById('fileInput');
@@ -453,6 +474,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => {
                 alert(`Erro ao processar arquivos: ${error}`);
             });
+
+            location.reload();
     });
     
     document.getElementById('exitUploadJson').addEventListener('click', function() {
