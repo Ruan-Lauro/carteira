@@ -301,20 +301,10 @@ function configurarDataAtual() {
 }
 
 function carregarChartJS() {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js';
-    script.integrity = 'sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==';
-    script.crossOrigin = 'anonymous';
-    script.referrerPolicy = 'no-referrer';
-    document.body.appendChild(script);
-    
-    script.onload = function() {
-      
-        const dadosSalvos = carregarDadosLocalStorage();
-        if (dadosSalvos && dadosSalvos.tabelaResultados && dadosSalvos.tabelaResultados.length > 0) {
-            preencherFormularioComDadosSalvos(dadosSalvos);
-        }
-    };
+    const dadosSalvos = carregarDadosLocalStorage();
+    if (dadosSalvos && dadosSalvos.tabelaResultados && dadosSalvos.tabelaResultados.length > 0) {
+        preencherFormularioComDadosSalvos(dadosSalvos);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

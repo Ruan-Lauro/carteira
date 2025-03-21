@@ -72,8 +72,8 @@ const dataTrasacao = () => {
                         <i class="fas ${icon} text-[28px] text-[#eceff4]"></i>
                     </div>
                     <div class="flex flex-col">
-                        <p class=" text-[26px] font-semibold mb-[-5px] max-5xl:text-[22px]">${trans.name}</p>
-                        <p class="opacity-60 text-[18px] font-semibold max-5xl:text-[16px]">${name}</p>
+                        <p class=" text-[26px] font-semibold mb-[-5px] max-5xl:text-[22px] truncate max-w-[237px]">${trans.name}</p>
+                        <p class="opacity-60 text-[18px] font-semibold max-5xl:text-[16px] truncate max-w-[237px]">${name}</p>
                     </div>
                 </div>
                 <p class="font-bold text-[26px]  max-5xl:text-[22px]" style="color: ${trans.type === "despesa" ? '#f5284e' : '#27f53c'};">
@@ -151,7 +151,7 @@ const Income = () => {
               <div class="flex items-center justify-center w-13 h-13 rounded-full " style="background-color: ${list.color};">
                 <i class="fas ${list.icon} text-[28px] text-[#eceff4]"></i>
               </div>
-              <p class=" text-[26px] font-semibold max-5xl:text-[22px]">${list.name}</p>
+              <p class=" text-[26px] font-semibold max-5xl:text-[22px] truncate max-w-[177px]">${list.name}</p>
             </div>
             <p class="font-semibold text-[26px] flex items-center max-5xl:text-[22px] max-5xl:mt-2" style="color: #27f53c;">
               R$${moneyIncome}
@@ -226,7 +226,7 @@ const Income = () => {
       legendItem.className = 'flex items-center gap-1';
       legendItem.innerHTML = `
         <div class="w-4 h-4" style="background-color: ${item.color};"></div>
-        <span class="">${item.name}</span>
+        <span class="truncate max-w-[94px]">${item.name}</span>
       `;
       legendContainer.appendChild(legendItem);
     });

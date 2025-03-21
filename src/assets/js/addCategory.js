@@ -144,7 +144,7 @@ const dataCategory = () => {
             <div class="flex items-center justify-center w-13 h-13 rounded-full" style="background-color: ${cat.color};">
                 <i class="fas ${cat.icon} text-[28px] text-[#eceff4]"></i>
             </div>
-            <p class="text-[26px] font-semibold max-5xl:text-[22px]">${cat.name}</p>
+            <p class="text-[26px] font-semibold max-5xl:text-[22px] truncate max-w-[179px]">${cat.name}</p>
         </div>
     `).join('');
 
