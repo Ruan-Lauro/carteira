@@ -7,27 +7,27 @@
     "theme_color": "#ffffff",
     "icons": [
       {
-        "src": "/android-chrome-192x192.png",
+        "src": "./src/assets/img/android-chrome-192x192.webp",
         "sizes": "192x192",
-        "type": "image/png"
+        "type": "image/webp"
       },
       {
-        "src": "/android-chrome-512x512.png",
+        "src": "./src/assets/img/android-chrome-512x512.webp",
         "sizes": "512x512",
-        "type": "image/png"
+        "type": "image/webp"
       }
     ],
     "screenshots": [
     {
-      "src": "/src/assets/img/pc.png",
+      "src": "/src/assets/img/pc.webp",
       "sizes": "912x695",
-      "type": "image/png",
+      "type": "image/webp",
       "form_factor": "wide"
     },
     {
-      "src": "/src/assets/img/mobile.png",
+      "src": "/src/assets/img/mobile.webp",
       "sizes": "408x653",
-      "type": "image/png"
+      "type": "image/webp"
     }
   ]
   }
