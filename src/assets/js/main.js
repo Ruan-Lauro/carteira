@@ -33,7 +33,7 @@ function checkInternetConnection() {
                 const isReallyOnline = await checkActiveConnection();
                 if (isReallyOnline) {
                     pElement.textContent = "online";
-                    pElement.style.color = "green";
+                    pElement.style.color = "#11FF00";
                 } else {
                     pElement.textContent = "offline";
                     pElement.style.color = "orange";

@@ -5,6 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="/src/assets/img/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Controle Financeiro</title>
+    <meta name="description" content="Site para controle financeiro">
+    <meta name="keywords" content="dinheiro, economia, controle, financeiro">
     <link href="/src/assets/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/src/assets/css/all.min.css">
     <link rel="manifest" href="/manifest.json">
@@ -80,15 +82,15 @@
                   </div>
                 </div>
                 <div class="flex flex-col w-full sm:w-[250px]" >
-                  <label for="type">Categoria</label>
-                  <select name="type" id="category" class="bg-white rounded-[5px] h-[45px] text-black pl-1 focus:outline-none">
+                  <label for="category">Categoria</label>
+                  <select name="type" id="category" autocomplete="off" class="bg-white rounded-[5px] h-[45px] text-black pl-1 focus:outline-none">
                     
                   </select>
                 </div>
               </div>
               <div>
-                <button class="text-[#eceff4] bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="addTrasaction">Registrar</button>
-                <button class="text-[#eceff4] bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="SeeUploadJson" type="button">Configuração</button>
+                <button class="text-white bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="addTrasaction">Registrar</button>
+                <button class="text-white bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] self-end mt-7 cursor-pointer text-[20px] font-semibold" id="SeeUploadJson" type="button">Configuração</button>
               </div>
             </form>
             <div  class="flex flex-col bg-background-200 w-[560px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] h-[500px] max-3xl:w-[800px] max-4xl:w-full" >
@@ -265,7 +267,7 @@
                 <label for="name">Nome</label>
                 <input type="text" name="name" id="nameUserEdit" class="bg-white rounded-[5px] h-[45px] text-black pl-1 focus:outline-none">
               </div>
-              <button class="text-[#eceff4] bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] mt-7 cursor-pointer text-[20px] font-semibold" id="addEditUser">Editar</button>
+              <button class="text-white bg-background-300 hover:bg-background-300/70 w-[150px] py-1 rounded-[7px] mt-7 cursor-pointer text-[20px] font-semibold" id="addEditUser">Editar</button>
           </div>
         </div>
     </main>
