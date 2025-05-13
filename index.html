@@ -73,7 +73,7 @@
                 </div>
                 <div class="flex flex-col w-full sm:w-[250px]" >
                   <label for="value">Valor</label>
-                  <input type="number" name="value" id="value" step="0.01" class="bg-white rounded-[5px] h-[45px] text-black pl-1 focus:outline-none">
+                  <input type="number" name="value" id="value" step="0.01" class="bg-white rounded-[5px] h-[45px] text-black pl-1 focus:outline-none" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')">
                 </div>
                 <div class="flex flex-col w-full sm:w-[250px]" >
                   <label for="type">Tipo</label>
