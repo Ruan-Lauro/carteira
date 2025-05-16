@@ -302,15 +302,22 @@ document.addEventListener("DOMContentLoaded", () => {
     atualizarTemaBotoes();
 });
 
-function configurarDataAtual() {
-    const dataAtual = new Date();
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    const dataFormatada = dataAtual.toLocaleDateString('pt-BR', options);
+
+function formatDate() {
+    const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+    const hoje = new Date();
+    const diaSemana = diasSemana[hoje.getDay()];
+    const dia = hoje.getDate();
+    const mes = meses[hoje.getMonth()];
+    const ano = hoje.getFullYear();
     
-    const currentDateElement = document.getElementById('current-date');
-    if (currentDateElement) {
-        currentDateElement.textContent = dataFormatada;
-    }
+    return `${diaSemana}, ${dia} de ${mes} de ${ano}`;
+}
+
+function configurarDataAtual() {
+    document.getElementById('current-dateN').textContent = formatDate();
 }
 
 function carregarChartJS() {

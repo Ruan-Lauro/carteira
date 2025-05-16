@@ -71,7 +71,7 @@ function formatDate() {
     const dia = hoje.getDate();
     const mes = meses[hoje.getMonth()];
     const ano = hoje.getFullYear();
-
+    
     return `${diaSemana}, ${dia} de ${mes} de ${ano}`;
 }
 
@@ -141,7 +141,7 @@ async function getWeatherData(latitude, longitude, city) {
 
 async function initApp() {
     document.getElementById('current-date').textContent = formatDate();
-
+    
     let locationData;
     let weatherData = { temperature: '--', cityName: 'null' };
 
