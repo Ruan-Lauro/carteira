@@ -38,8 +38,14 @@ function carregarDadosLocalStorage() {
 
 function preencherFormularioComDadosSalvos(dados) {
     if (dados) {
-        valorInicialInput.value = dados.inputs.valorInicial || '';
-        valorMensalInput.value = dados.inputs.valorMensal || '';
+        valorInicialInput.value = dados.inputs.valorInicial.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+            }) || '';
+        valorMensalInput.value = dados.inputs.valorMensal.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+            }) || '';
         taxaJurosInput.value = dados.inputs.taxaJuros || '';
         periodoInput.value = dados.inputs.periodo || '';
         tipoTaxaSelect.value = dados.inputs.tipoTaxa || 'yearly';
@@ -57,10 +63,17 @@ function preencherFormularioComDadosSalvos(dados) {
 }
 
 function calcularJurosCompostos() {
+    const raw = valorInicialInput.value.replace(/\D/g, '');
+    const valueReal = parseFloat(raw) / 100;
+    const valorInicial = valueReal || 0;
 
-    const valorInicial = parseFloat(valorInicialInput.value) || 0;
-    const valorMensal = parseFloat(valorMensalInput.value) || 0;
-    const taxaJuros = parseFloat(taxaJurosInput.value) || 0;
+    const rawTwo = valorMensalInput.value.replace(/\D/g, '');
+    const valueRealTwo = parseFloat(rawTwo) / 100;
+    const valorMensal = valueRealTwo || 0;
+
+    const taxa = parseFloat(taxaJurosInput.value.replace(',', '.'));
+    const taxaJuros = taxa || 0;
+
     const periodo = parseInt(periodoInput.value) || 0;
     const tipoTaxa = tipoTaxaSelect.value;
     const tipoPeriodo = tipoPeriodoSelect.value;

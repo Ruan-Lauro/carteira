@@ -67,21 +67,21 @@
                         <label for="valueInitial">Valor Inicial</label>
                         <div class="flex mt-3" >
                             <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >R$</p>
-                            <input step="0.01" type="number" name="valueInitial" class="bg-white  rounded-br-[5px]  rounded-tr-[5px] h-[45px] text-black pl-1 focus:outline-none w-full">
+                            <input step="0.01" type="text" oninput="formatCurrency(this)" placeholder="R$ 0,00" name="valueInitial" class="bg-white  rounded-br-[5px]  rounded-tr-[5px] h-[45px] text-black pl-1 focus:outline-none w-full">
                         </div>
                     </div>
                     <div class="flex flex-col  w-[40%] min-w-[280px]" >
                         <label for="valueInitial">Valor Mensal</label>
                         <div class="flex mt-3" >
                             <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >R$</p>
-                            <input step="0.01" type="number" name="valueInitial" class="bg-white  rounded-br-[5px] rounded-tr-[5px] h-[45px] text-black pl-1 focus:outline-none w-full">
+                            <input step="0.01" type="text" oninput="formatCurrency(this)" placeholder="R$ 0,00" name="valueInitial" class="bg-white  rounded-br-[5px] rounded-tr-[5px] h-[45px] text-black pl-1 focus:outline-none w-full">
                         </div>
                     </div>
                     <div class="flex flex-col  w-[40%] min-w-[280px]" >
                         <label for="valueInitial">Taxa de Juros</label>
                         <div class="flex mt-3" >
                             <p class="bg-[#b9b9b9] rounded-bl-[5px] rounded-tl-[5px] flex items-center justify-self-center font-bold  px-3" >%</p>
-                            <input step="0.01" type="number" name="valueInitial" class="bg-white h-[45px] text-black pl-1 focus:outline-none w-full">
+                            <input step="0.01" type="text" oninput="formatFloatComma(this)" name="valueInitial" class="bg-white h-[45px] text-black pl-1 focus:outline-none w-full">
                             <select name="timeInterest" id="timeInterest" class="bg-[#b9b9b9] rounded-br-[5px] rounded-tr-[5px] px-1 text-black pl-1 focus:outline-none">
                                 <option value="yearly">Anual</option>
                                 <option value="monthly">Mensal</option>
@@ -92,7 +92,7 @@
                     <div class="flex flex-col  w-[40%] min-w-[280px]" >
                         <label for="valueInitial">Período</label>
                         <div class="flex mt-3" >
-                            <input step="0.01" type="number" name="valueInitial" class="bg-white h-[45px] text-black pl-1 focus:outline-none rounded-bl-[5px] rounded-tl-[5px] w-full">
+                            <input step="0.01" type="text" oninput="formatInteger(this)" name="valueInitial" class="bg-white h-[45px] text-black pl-1 focus:outline-none rounded-bl-[5px] rounded-tl-[5px] w-full">
                             <select name="timeInterest" id="timeInterest" class="bg-[#b9b9b9] rounded-br-[5px] rounded-tr-[5px] px-1 text-black pl-1 focus:outline-none">
                                 <option value="years">Ano(s)</option>
                                 <option value="month">Mês(es)</option>
@@ -153,7 +153,7 @@
                 <div class="flex items-center justify-between max-4xl:flex-col" >
                     <div class="mb-4 max-4xl:w-[80%] text-text-100 flex flex-col w-[19%] ">
                         <label for="amount" class="block  font-semibold mb-2">Valor</label>
-                        <input type="number" id="amount" class="w-full p-2 border border-gray-300 rounded h-[50px] bg-white text-[black] " value="6.49">
+                        <input type="text" id="amount" class="w-full p-2 border border-gray-300 rounded h-[50px] bg-white text-[black] " oninput="formatCurrency(this)" placeholder="R$ 0,00">
                     </div>
                     
                     <div class="mb-4 max-4xl:w-[80%] text-text-100 flex flex-col w-[29%] ">
@@ -231,6 +231,38 @@
         integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" 
         crossorigin="anonymous" 
         referrerpolicy="no-referrer"></script>
+    <script>
+        function formatCurrency(input) {
+            let value = input.value.replace(/\D/g, '');
+            let float = parseFloat(value) / 100;
+
+            if (isNaN(float)) {
+            input.value = '';
+            return;
+            }
+            
+            input.value = float.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+            });
+        }
+
+        function formatFloatComma(input) {
+            let value = input.value.replace(/[^0-9,]/g, '');
+
+            const parts = value.split(',');
+            if (parts.length > 2) {
+                value = parts[0] + ',' + parts[1];
+            }
+
+            input.value = value;
+        }
+
+        function formatInteger(input) {
+            input.value = input.value.replace(/\D/g, '');
+        }
+
+    </script>
 
   </body>
 </html>

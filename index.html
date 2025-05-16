@@ -62,8 +62,8 @@
               </div>
           </div>
       </header>
-        <main class="flex self-center mt-10 w-[1418.25px] max-3xl:flex-col max-3xl:items-center max-3xl:w-full max-4xl:px-5" >
-          <div class="flex flex-col gap-5 3xl:mr-4">
+        <main class="flex self-center 3xl:gap-5 mt-10 w-[1418.25px] max-3xl:flex-col max-3xl:items-center max-3xl:w-full max-4xl:px-5" >
+          <div class="flex flex-col gap-5">
             <form id="addTrasaction" class="flex flex-col bg-background-200 w-[560px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] sm:h-[310px] max-3xl:w-[800px] max-4xl:w-full" >
               <h2 class="text-text-200 font-semibold text-[26px]" >Nova transação</h2>
               <div class="flex flex-wrap text-text-100 gap-4 text-[20px] " >
@@ -73,7 +73,7 @@
                 </div>
                 <div class="flex flex-col w-full sm:w-[250px]" >
                   <label for="value">Valor</label>
-                  <input type="number" name="value" id="value" step="0.01" class="bg-white rounded-[5px] h-[45px] text-black pl-1 focus:outline-none" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')">
+                  <input type="text" name="value" id="value" step="0.01" class="bg-white rounded-[5px] h-[45px] text-black pl-1 focus:outline-none"  oninput="formatCurrency(this)" placeholder="R$ 0,00">
                 </div>
                 <div class="flex flex-col w-full sm:w-[250px]" >
                   <label for="type">Tipo</label>
@@ -100,7 +100,7 @@
               </div>
             </div>
           </div>
-          <div class="flex w-[810px] max-3xl:justify-between max-3xl:mt-5 max-4xl:flex-col max-4xl:w-full" >
+          <div class="flex w-[810px] max-3xl:justify-between max-3xl:mt-5 max-4xl:flex-col max-4xl:w-full 3xl:gap-5" >
             <div class="flex flex-col gap-5 max-4xl:w-full max-4xl:mb-5" >
               <div  class="flex flex-col bg-background-200 w-[400px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] h-[310px] max-4xl:w-full" >
                 <h2 class="text-text-200 font-semibold text-[26px] mb-2" >Receita por categoria</h2>
@@ -118,7 +118,7 @@
                 <div id="chart-legend" class="flex flex-wrap gap-5 text-sm mt-10 text-text-100"></div>
               </div>
             </div>
-            <div class="flex flex-col gap-5 3xl:ml-[2.9%] max-4xl:w-full" >
+            <div class="flex flex-col gap-5 max-4xl:w-full" >
               <div  class="flex flex-col bg-background-200 w-[400px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] h-[310px] max-4xl:w-full" >
                 <h2 class="text-text-200 font-semibold text-[26px] max-5xl:mb-4" >Cotação das Moedas</h2>
                 <div class="flex flex-col text-text-100 text-[26px] h-[235px] overflow-y-auto" id="cota" >
@@ -275,5 +275,21 @@
     <script type="module" src="/src/assets/js/addCategory.js"></script>
     <script type="module" src="/src/assets/js/transation.js"></script>
     <script type="module" src="/src/assets/js/cota.js"></script>
+    <script>
+      function formatCurrency(input) {
+        let value = input.value.replace(/\D/g, '');
+        let float = parseFloat(value) / 100;
+
+        if (isNaN(float)) {
+          input.value = '';
+          return;
+        }
+        
+        input.value = float.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+      }
+    </script>
   </body>
 </html>

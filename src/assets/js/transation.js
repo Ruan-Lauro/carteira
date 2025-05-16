@@ -1,7 +1,9 @@
 document.getElementById('addTrasaction').addEventListener('submit', function (event) {
     event.preventDefault();
     const name = document.getElementById('name').value;
-    const value = document.getElementById('value').value;
+    const raw = document.getElementById('value').value;
+    const valueReal = raw.replace(/\D/g, '');
+    const value = parseFloat(valueReal) / 100;
     const category = document.getElementById('category').value;
 
     console.log(name, value,     category);
@@ -64,6 +66,11 @@ const dataTrasacao = () => {
         const color = category ? category.color : '#ccc';
         const icon = category ? category.icon : 'fa-question-circle';
         const name = category ? category.name : 'Categoria Desconhecida';
+        const valueMoney = Number(trans.value).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+
 
         return `
             <div class="flex justify-between pr-2 max-5xl:flex-col max-5xl:mb-3">
@@ -77,7 +84,7 @@ const dataTrasacao = () => {
                     </div>
                 </div>
                 <p class="font-bold text-[26px]  max-5xl:text-[22px]" style="color: ${trans.type === "despesa" ? '#f5284e' : '#27f53c'};">
-                    ${trans.type === "despesa" ? '- ' : ''} ${trans.value}  R$
+                    ${trans.type === "despesa" ? '- ' : ''} ${valueMoney}
                 </p>
             </div>
         `;
@@ -91,7 +98,7 @@ const moneyMenu = () => {
     const moneyMenu = document.getElementById('money');
     if (listTransaction.length === 0){
         moneyMenu.style.color = '#27f53c';
-        moneyMenu.innerText = `0 R$`;
+        moneyMenu.innerText = `R$ 0`;
         return;
     };
 
@@ -110,7 +117,11 @@ const moneyMenu = () => {
         });
 
         moneyMenu.style.color = money >= 0?'#27f53c':'#f5284e';
-        moneyMenu.innerText = `${money.toFixed(2)} R$`
+        moneyMenu.innerText = money.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+
     }
 };
 
@@ -144,6 +155,11 @@ const Income = () => {
             moneyIncome += value;
           }
         });
+
+        let valueMoneyIncome = moneyIncome.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
         
         incomeHtml.innerHTML += `
           <div class="flex justify-between pr-2 mb-5 max-5xl:flex-col">
@@ -151,10 +167,10 @@ const Income = () => {
               <div class="flex items-center justify-center w-13 h-13 rounded-full " style="background-color: ${list.color};">
                 <i class="fas ${list.icon} text-[28px] text-[#eceff4]"></i>
               </div>
-              <p class=" text-[26px] font-semibold max-5xl:text-[22px] truncate max-w-[177px]">${list.name}</p>
+              <p class=" text-[26px] font-semibold max-5xl:text-[22px] max-w-[100px] break-words">${list.name}</p>
             </div>
             <p class="font-semibold text-[26px] flex items-center max-5xl:text-[22px] max-5xl:mt-2" style="color: #27f53c;">
-              R$${moneyIncome}
+              ${valueMoneyIncome}
             </p>
           </div>
         `;

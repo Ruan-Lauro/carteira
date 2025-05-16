@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorDiv = document.getElementById('error');
     const errorText = document.getElementById('errorText');
 
-    // Função para carregar as configurações iniciais
     function loadSettings() {
         const savedAmount = localStorage.getItem('amount');
         const savedFromCurrency = localStorage.getItem('fromCurrency');
@@ -21,14 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (savedToCurrency) toCurrencySelect.value = savedToCurrency;
     }
     
-    // Função para salvar as configurações atuais
     function saveSettings() {
         localStorage.setItem('amount', amountInput.value);
         localStorage.setItem('fromCurrency', fromCurrencySelect.value);
         localStorage.setItem('toCurrency', toCurrencySelect.value);
     }
 
-    // Função para salvar resultados de conversões bem-sucedidas
     function saveConversionResult(fromCurrency, toCurrency, rate, timestamp) {
         const conversionKey = `${fromCurrency}_${toCurrency}`;
         const conversionData = {
@@ -38,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(`conversion_${conversionKey}`, JSON.stringify(conversionData));
     }
 
-    // Função para obter resultados de conversões anteriores
     function getStoredConversionRate(fromCurrency, toCurrency) {
         const conversionKey = `${fromCurrency}_${toCurrency}`;
         const storedData = localStorage.getItem(`conversion_${conversionKey}`);
@@ -46,8 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (storedData) {
             return JSON.parse(storedData);
         }
-        
-        // Tentar a conversão inversa se disponível
+
         const inverseKey = `${toCurrency}_${fromCurrency}`;
         const inverseData = localStorage.getItem(`conversion_${inverseKey}`);
         
@@ -63,11 +58,38 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
     }
 
-    // Carregar configurações iniciais
+    fromCurrencySelect.addEventListener('change', updateCurrencyOptions);
+    toCurrencySelect.addEventListener('change', updateCurrencyOptions);
+
+
+    function updateCurrencyOptions() {
+        const fromCurrency = fromCurrencySelect.value;
+        const toCurrency = toCurrencySelect.value;
+
+        Array.from(toCurrencySelect.options).forEach(option => {
+            option.disabled = option.value === fromCurrency;
+        });
+
+        Array.from(fromCurrencySelect.options).forEach(option => {
+            option.disabled = option.value === toCurrency;
+        });
+
+        if (fromCurrency === toCurrency) {
+            const firstAvailable = [...toCurrencySelect.options].find(opt => !opt.disabled);
+            if (firstAvailable) {
+                toCurrencySelect.value = firstAvailable.value;
+            }
+        }
+    }
+
     loadSettings();
+    updateCurrencyOptions();
 
     convertBtn.addEventListener('click', async () => {
-        const amount = parseFloat(amountInput.value);
+        
+        const raw = amountInput.value.replace(/\D/g, '');
+        const valorEmReais = parseFloat(raw) / 100;
+        const amount = valorEmReais;
         const fromCurrency = fromCurrencySelect.value;
         const toCurrency = toCurrencySelect.value;
 
@@ -76,25 +98,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Salvar as configurações atuais
         saveSettings();
 
-        // Esconder elementos e mostrar o loading
         resultDiv.classList.add('hidden');
         errorDiv.classList.add('hidden');
         loadingDiv.classList.remove('hidden');
 
         try {
-            // Tentar fazer a conversão online
             const result = await convertCurrency(amount, fromCurrency, toCurrency);
             showResult(result, amount, fromCurrency, toCurrency);
             
-            // Salvar o resultado bem-sucedido
             saveConversionResult(fromCurrency, toCurrency, result.rate, Date.now());
         } catch (error) {
             console.error('Erro na API:', error);
             
-            // Tentar usar dados salvos anteriormente
             const storedData = getStoredConversionRate(fromCurrency, toCurrency);
             
             if (storedData) {
@@ -114,40 +131,52 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingDiv.classList.add('hidden');
     });
 
+    const CACHE_DURATION = 1000 * 60 * 10;
+
     async function convertCurrency(amount, fromCurrency, toCurrency) {
-        // Se as moedas são iguais, a taxa é 1
-        if (fromCurrency === toCurrency) {
-            return { convertedAmount: amount, rate: 1 };
+        if (fromCurrency === toCurrency) return { convertedAmount: amount, rate: 1 };
+
+        let stored = localStorage.getItem('cota');
+        let data;
+
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            const isFresh = Date.now() - parsed.timestamp < CACHE_DURATION;
+            data = isFresh ? parsed : await getExchangeRates();
+        } else {
+            data = await getExchangeRates();
         }
 
-        // Modificado para usar a API corretamente
-        const url = `https://api.coingecko.com/api/v3/exchange_rates`;
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`Erro na API: ${response.status}`);
+        const rates = data?.rates || {};
+
+        const aliases = {
+            usd: 'dolar',
+            eur: 'euro',
+            brl: 'brl',
+            btc: 'bitcoin',
+            doge: 'dogecoin',
+            Fgbp: 'libra'
+        };
+
+        const fromRate = aliases[fromCurrency] === 'brl' ? 1 : rates[aliases[fromCurrency]];
+        const toRate = aliases[toCurrency] === 'brl' ? 1 : rates[aliases[toCurrency]];
+
+        console.log('Rates:', rates);
+        console.log('De:', fromCurrency, '=>', fromRate);
+        console.log('Para:', toCurrency, '=>', toRate);
+
+        if (fromRate && toRate) {
+            const rate = fromRate / toRate; // CORRETO: todos os valores são baseados em BRL
+            const convertedAmount = amount * rate;
+            return { convertedAmount, rate };
         }
-        
-        const data = await response.json();
-        
-        // Verificar se temos as taxas necessárias
-        if (!data.rates || !data.rates[fromCurrency] || !data.rates[toCurrency]) {
-            // Tente uma URL alternativa se a primeira não retornar os dados esperados
-            return await convertCurrencyAlternative(amount, fromCurrency, toCurrency);
-        }
-        
-        // Calcular a taxa de conversão usando as taxas em relação ao BTC ou USD
-        const fromRate = data.rates[fromCurrency].value;
-        const toRate = data.rates[toCurrency].value;
-        const rate = toRate / fromRate;
-        
-        const convertedAmount = amount * rate;
-        return { convertedAmount, rate };
+
+        return await convertCurrencyAlternative(amount, fromCurrency, toCurrency);
     }
-    
-    // Função alternativa de conversão caso a primeira falhe
+
+
+
     async function convertCurrencyAlternative(amount, fromCurrency, toCurrency) {
-        // Tentar usar uma URL alternativa com as moedas específicas
         const currencyPair = `${fromCurrency}_${toCurrency}`;
         const url = `https://free.currconv.com/api/v7/convert?q=${currencyPair}&compact=ultra&apiKey=sample-key-do-not-use-in-prod`;
         
@@ -166,14 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const convertedAmount = amount * rate;
             return { convertedAmount, rate };
         } catch (error) {
-            // Se também falhar, tente uma terceira abordagem
             return await convertCurrencyDirect(amount, fromCurrency, toCurrency);
         }
     }
     
-    // Função direta para conversão como último recurso
     async function convertCurrencyDirect(amount, fromCurrency, toCurrency) {
-        // Formato específico da API do CoinGecko para criptomoedas
         const cryptoUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${fromCurrency}&vs_currencies=${toCurrency}`;
         
         try {
@@ -189,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const convertedAmount = amount * rate;
                 return { convertedAmount, rate };
             } else {
-                // Se não encontrou, tentar uma maneira diferente
                 const reverseUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${toCurrency}&vs_currencies=${fromCurrency}`;
                 const reverseResponse = await fetch(reverseUrl);
                 
@@ -213,11 +238,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function formatDynamicDecimal(value) {
+        let [intPart, decimalPart] = value.toString().split('.');
+
+        if (!decimalPart) return `${intPart},00`;
+
+        let trimmed = decimalPart.replace(/0+$/, '');
+
+        if (trimmed.length === 1) {
+            return `${intPart},${trimmed}`;
+        }
+
+        let output = '';
+        for (let i = 0; i < trimmed.length; i++) {
+            output += trimmed[i];
+            const len = output.length;
+            if (len >= 2 && output[len - 1] !== '0' && output[len - 2] !== '0') {
+                break;
+            }
+        }
+
+        return `${intPart},${output}`;
+    }
+
+
     function showResult(result, amount, fromCurrency, toCurrency, isFromCache = false, lastUpdate = null) {
         const convertedAmount = result.convertedAmount;
         const rate = result.rate;
-        const formattedAmount = amount.toFixed(4);
-        const formattedConvertedAmount = convertedAmount.toFixed(4);
+
+        const formattedAmount = amount.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        const formattedConvertedAmount = formatDynamicDecimal(convertedAmount);
+        console.log(convertedAmount)
+
+        const formattedRate = rate.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
 
         let content = `
             ${getCurrencySymbol(fromCurrency)} ${formattedAmount} ${fromCurrency.toUpperCase()} equivalem a<br>
@@ -227,11 +287,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isFromCache && lastUpdate) {
             content += `<br><span class="text-sm text-gray-500">(Taxa armazenada de ${formatDate(lastUpdate)})</span>`;
         }
-        
+
         resultText.innerHTML = content;
-        exchangeRate.textContent = `Taxa: 1 ${fromCurrency.toUpperCase()} = ${rate.toFixed(6)} ${toCurrency.toUpperCase()}`;
+        exchangeRate.textContent = `Taxa: 1 ${fromCurrency.toUpperCase()} = ${formattedRate} ${toCurrency.toUpperCase()}`;
         resultDiv.classList.remove('hidden');
     }
+
 
     function showError(message) {
         errorText.textContent = message;
@@ -260,6 +321,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Executar conversão automaticamente ao carregar
+
     convertBtn.click();
 });
