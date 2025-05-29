@@ -59,6 +59,8 @@ const deleteTransaction = (id) => {
   localStorage.setItem('listTransaction', JSON.stringify(updatedList));
   dataTrasacao();
   moneyMenu(); 
+  showGIcon();
+  showRIcon();
 };
 
 const addDeleteListeners = () => {
@@ -286,6 +288,10 @@ const Income = () => {
 const iconButton = document.getElementById('RCicon');
 
 iconButton.addEventListener('click', function () {
+  showRIcon();
+});
+
+const showRIcon = () => {
   const svg = iconButton.querySelector('svg');
   const incomeHtml = document.getElementById('income');
   const listCategory = JSON.parse(localStorage.getItem('listCategory')) || [];
@@ -414,9 +420,14 @@ iconButton.addEventListener('click', function () {
       legendContainer.appendChild(legendItem);
     });
   }
-});
+};
 
 document.getElementById('RCicon2').addEventListener('click', function () {
+  showGIcon();
+});
+
+const showGIcon = () =>{
+  const thisV = document.getElementById('RCicon2');
   const svg = document.querySelector('#RCicon2 svg');
   const expenseHtml = document.getElementById('income2');
   const listCategory = JSON.parse(localStorage.getItem('listCategory')) || [];
@@ -425,8 +436,8 @@ document.getElementById('RCicon2').addEventListener('click', function () {
   const legendContainer = document.getElementById('chart-legend');
 
   if (svg.id !== 'graph2') {
-    this.innerHTML = '';
-    this.innerHTML = `
+    thisV.innerHTML = '';
+    thisV.innerHTML = `
        <svg class="text-[#5e81ac] hover:text-text-200 cursor-pointer mt-5" width="30px" height="30px" id="graph2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M19,3 L5,3 C3.9,3 3,3.9 3,5 L3,19 C3,20.1 3.9,21 5,21 L19,21 C20.1,21 21,20.1 21,19 L21,5 C21,3.9 20.1,3 19,3 Z M9,17 H7 V10 H9 V17 Z M13,17 H11 V7 H13 V17 Z M17,17 H15 V13 H17 V17 Z" fill="currentColor"/>
       </svg>
@@ -469,8 +480,8 @@ document.getElementById('RCicon2').addEventListener('click', function () {
     });
 
   } else {
-    this.innerHTML = '';
-    this.innerHTML = `
+    thisV.innerHTML = '';
+    thisV.innerHTML = `
        <svg id='list2' class='text-[#5e81ac] mt-10 hover:text-text-200 cursor-pointer' width='25px' height='25px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path d='M8 6.00067L21 6.00139M8 12.0007L21 12.0015M8 18.0007L21 18.0015M3.5 6H3.51M3.5 12H3.51M3.5 18H3.51M4 6C4 6.27614 3.77614 6.5 3.5 6.5C3.22386 6.5 3 6.27614 3 6C3 5.72386 3.22386 5.5 3.5 5.5C3.77614 5.5 4 5.72386 4 6ZM4 12C4 12.2761 3.77614 12.5 3.5 12.5C3.22386 12.5 3 12.2761 3 12C3 11.7239 3.22386 11.5 3.5 11.5C3.77614 11.5 4 11.7239 4 12ZM4 18C4 18.2761 3.77614 18.5 3.5 18.5C3.22386 18.5 3 18.2761 3 18C3 17.7239 3.22386 17.5 3.5 17.5C3.77614 17.5 4 17.7239 4 18Z' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>
       </svg>
@@ -537,6 +548,9 @@ document.getElementById('RCicon2').addEventListener('click', function () {
       legendContainer.appendChild(legend);
     });
   }
-});
+}
+
+window.showGIcon = showGIcon;
+window.showRIcon = showRIcon;
   
 document.addEventListener('DOMContentLoaded', Income);

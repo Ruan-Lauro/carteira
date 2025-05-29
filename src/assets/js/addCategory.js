@@ -147,7 +147,8 @@ const deleteCategory = (id) => {
   dataCategory();
   window.dataTrasacao();
   window.moneyMenu();
-
+  window.showGIcon();
+  window.showRIcon();
 };
 
 const dataCategory = () => {
