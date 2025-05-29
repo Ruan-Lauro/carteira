@@ -71,108 +71,69 @@ function formatDate() {
     const dia = hoje.getDate();
     const mes = meses[hoje.getMonth()];
     const ano = hoje.getFullYear();
-    
+
     return `${diaSemana}, ${dia} de ${mes} de ${ano}`;
 }
 
-async function getCityByGeolocation() {
-    return new Promise((resolve, reject) => {
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    try {
-                        const response = await fetch(`https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&format=json&api_key=67cb5cda5738f625118564tdo320fcc`);
-                        const data = await response.json();
-                        if (data.address && data.address.city) {
-                            localStorage.setItem('city',JSON.stringify({ city: data.address.city, latitude, longitude }));
-                            resolve({ city: data.address.city, latitude, longitude });
-                        } else {
-                            reject("Cidade não encontrada.");
-                        }
-                    } catch (error) {
-                        reject("Erro ao buscar a cidade.");
-                    }
-                },
-                () => reject("Permissão negada.")
-            );
-        } else {
-            reject("Geolocalização não suportada.");
-        }
-    });
+async function getCityByIP() {
+    try {
+        const response = await fetch('https://ipinfo.io?token=8f9ccc19db938c');
+        console.log(response)
+        const city = await response.text();
+        return city.trim();
+    } catch (error) {
+        console.error('Erro ao buscar cidade pelo IP:', error);
+        return 'Cidade desconhecida';
+    }
 }
 
-async function getWeatherData(latitude, longitude, city) {
+async function getWeatherFromWttr(city) {
     try {
-        if (!latitude || !longitude) {
-            throw new Error("Coordenadas inválidas");
-        }
-
-        const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&timezone=auto`);
-        const weatherData = await weatherResponse.json();
-        localStorage.setItem('temper',JSON.stringify({ temperature: Math.round(weatherData.current.temperature_2m),
-            cityName: city }));
+        const response = await fetch(`https://wttr.in/${city}?format=j1`);
+        const data = await response.json();
+  
+        const tempC = data.current_condition[0].temp_C;
         return {
-            temperature: Math.round(weatherData.current.temperature_2m),
+            temperature: tempC,
             cityName: city
         };
     } catch (error) {
-        console.error('Erro ao obter dados meteorológicos:', error);
-        const elements = JSON.parse(localStorage.getItem('temper'));
-
-        if(elements){
-            
-            return {
-                temperature: elements.temperature,
-                cityName: elements.cityName
-            };
-        }else{
-            return {
-                temperature: '--',
-                cityName: city
-            }
-        }
-        
-       
-        
+        console.error('Erro ao obter dados do wttr.in:', error);
+        return {
+            temperature: '--',
+            cityName: city
+        };
     }
 }
 
-
 async function initApp() {
-    document.getElementById('current-date').textContent = formatDate();
     
-    let locationData;
-    let weatherData = { temperature: '--', cityName: 'null' };
+    if(document.getElementById('current-date')){
+        document.getElementById('current-date').textContent = formatDate();
+    }
+    
+    let city = localStorage.getItem('city');
 
-    try {
-        locationData = await getCityByGeolocation();
-        
-        weatherData = await getWeatherData(
-            locationData.latitude, 
-            locationData.longitude, 
-            locationData.city
-        );
-    } catch (error) {
-        locationData = JSON.parse(localStorage.getItem('city')); 
-        if(locationData){
-  
-            weatherData = await getWeatherData(
-                locationData.latitude, 
-                locationData.longitude, 
-                locationData.city
-            );
-        }
-        console.warn("Geolocalização falhou:", error);
-       
-        
+    if (!city) {
+        const cityData = await getCityByIP(); 
+        localStorage.setItem('city', JSON.stringify(cityData)); 
+        city = cityData;
+    } else {
+        city = JSON.parse(city); 
     }
 
-    document.getElementById('city-name').textContent = weatherData.cityName;
+    console.log(city); 
+    console.log(city.ip); 
+
+    const weatherData = await getWeatherFromWttr(city.city);
+
+    document.getElementById('city-name').textContent = city.city;
     document.getElementById('temperature').textContent = `${weatherData.temperature}º`;
 }
 
+
 document.addEventListener('DOMContentLoaded', initApp);
+
 
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -425,67 +386,92 @@ function readJSONFile(file) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('downloadBoth').addEventListener('click', function() {
-        downloadMultipleItems(['listTransaction', 'listCategory'], 'financial_data.json');
-    });
+    const downloadBothBtn = document.getElementById('downloadBoth');
+    if (downloadBothBtn) {
+        downloadBothBtn.addEventListener('click', function() {
+            downloadMultipleItems(['listTransaction', 'listCategory'], 'financial_data.json');
+        });
+    }
 
-    document.getElementById('deleteButton').addEventListener('click', function (){
-        localStorage.removeItem('listTransaction');
-        localStorage.removeItem('listCategory');
-        location.reload();
-    });
-    
-    document.getElementById('uploadButton').addEventListener('click', function() {
-        const fileInput = document.getElementById('fileInput');
-        const files = fileInput.files;
-        
-        if (files.length === 0) {
-            alert('Por favor, selecione pelo menos um arquivo para upload.');
-            return;
-        }
-        
-        const promises = [];
-        
-        for (let i = 0; i < files.length; i++) {
-            promises.push(readJSONFile(files[i]));
-        }
-        
-        Promise.all(promises)
-            .then(results => {
-                let totalSaved = 0;
-                
-                results.forEach(result => {
-                    let keyPrefix = '';
-                    if (result.filename.includes('transaction')) {
-                        keyPrefix = 'listTransaction';
-                    } else if (result.filename.includes('categor')) {
-                        keyPrefix = 'listCategory';
-                    } else if (result.filename.includes('financial')) {
-                        keyPrefix = '';
+    const deleteButton = document.getElementById('deleteButton');
+    if (deleteButton) {
+        deleteButton.addEventListener('click', function (){
+            localStorage.removeItem('listTransaction');
+            localStorage.removeItem('listCategory');
+            location.reload();
+        });
+    }
+
+    const uploadButton = document.getElementById('uploadButton');
+    if (uploadButton) {
+        uploadButton.addEventListener('click', function() {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput) {
+                alert('Input de arquivo não encontrado.');
+                return;
+            }
+            const files = fileInput.files;
+
+            if (files.length === 0) {
+                alert('Por favor, selecione pelo menos um arquivo para upload.');
+                return;
+            }
+
+            const promises = [];
+
+            for (let i = 0; i < files.length; i++) {
+                promises.push(readJSONFile(files[i]));
+            }
+
+            Promise.all(promises)
+                .then(results => {
+                    let totalSaved = 0;
+
+                    results.forEach(result => {
+                        let keyPrefix = '';
+                        if (result.filename.includes('transaction')) {
+                            keyPrefix = 'listTransaction';
+                        } else if (result.filename.includes('categor')) {
+                            keyPrefix = 'listCategory';
+                        } else if (result.filename.includes('financial')) {
+                            keyPrefix = '';
+                        }
+
+                        const saved = saveToLocalStorage(result.data, keyPrefix);
+                        totalSaved += saved;
+                    });
+
+                    alert(`${totalSaved} itens foram salvos no localStorage com sucesso!`);
+                    const divUploadJson = document.getElementById('divUploadJson');
+                    if (divUploadJson) {
+                        divUploadJson.style.display = 'none';
                     }
-                    
-                    const saved = saveToLocalStorage(result.data, keyPrefix);
-                    totalSaved += saved;
+                })
+                .catch(error => {
+                    alert(`Erro ao processar arquivos: ${error}`);
                 });
-                
-                alert(`${totalSaved} itens foram salvos no localStorage com sucesso!`);
-                document.getElementById('divUploadJson').style.display = 'none';
-            })
-            .catch(error => {
-                alert(`Erro ao processar arquivos: ${error}`);
-            });
 
             location.reload();
-    });
-    
-    document.getElementById('exitUploadJson').addEventListener('click', function() {
-        document.getElementById('divUploadJson').style.display = 'none';
-    });
-    
+        });
+    }
+
+    const exitUploadJsonBtn = document.getElementById('exitUploadJson');
+    if (exitUploadJsonBtn) {
+        exitUploadJsonBtn.addEventListener('click', function() {
+            const divUploadJson = document.getElementById('divUploadJson');
+            if (divUploadJson) {
+                divUploadJson.style.display = 'none';
+            }
+        });
+    }
+
     const seeUploadBtn = document.getElementById('SeeUploadJson');
     if (seeUploadBtn) {
         seeUploadBtn.addEventListener('click', function() {
-            document.getElementById('divUploadJson').style.display = 'flex';
+            const divUploadJson = document.getElementById('divUploadJson');
+            if (divUploadJson) {
+                divUploadJson.style.display = 'flex';
+            }
         });
     }
 });
