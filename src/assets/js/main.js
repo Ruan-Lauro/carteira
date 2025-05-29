@@ -79,8 +79,8 @@ async function getCityByIP() {
     try {
         const response = await fetch('https://ipinfo.io?token=8f9ccc19db938c');
         console.log(response)
-        const city = await response.text();
-        return city.trim();
+        const city = await response.json();
+        return city;
     } catch (error) {
         console.error('Erro ao buscar cidade pelo IP:', error);
         return 'Cidade desconhecida';
@@ -105,31 +105,45 @@ async function getWeatherFromWttr(city) {
         };
     }
 }
-
 async function initApp() {
-    
-    if(document.getElementById('current-date')){
-        document.getElementById('current-date').textContent = formatDate();
-    }
-    
-    let city = localStorage.getItem('city');
+    const currentDateElement = document.getElementById('current-date');
+    const cityNameElement = document.getElementById('city-name');
+    const temperatureElement = document.getElementById('temperature');
 
-    if (!city) {
-        const cityData = await getCityByIP(); 
-        localStorage.setItem('city', JSON.stringify(cityData)); 
-        city = cityData;
-    } else {
-        city = JSON.parse(city); 
+    if (currentDateElement) {
+        currentDateElement.textContent = formatDate();
     }
 
-    console.log(city); 
-    console.log(city.ip); 
+    let cityData;
+    const storedCity = localStorage.getItem('city');
 
-    const weatherData = await getWeatherFromWttr(city.city);
+    try {
+        if (storedCity) {
+            cityData = JSON.parse(storedCity);
+        } else {
+            const ipInfo = await getCityByIP();
+            cityData = { city: ipInfo.city };
+            localStorage.setItem('city', JSON.stringify(cityData));
+        }
 
-    document.getElementById('city-name').textContent = city.city;
-    document.getElementById('temperature').textContent = `${weatherData.temperature}º`;
+        const weatherData = await getWeatherFromWttr(cityData.city);
+
+        if (cityNameElement && temperatureElement) {
+            cityNameElement.textContent = cityData.city;
+            temperatureElement.textContent = `${weatherData.temperature}º`;
+        }
+
+    } catch (error) {
+        console.error('Erro ao inicializar a aplicação:', error);
+
+        if (cityNameElement && temperatureElement) {
+            cityNameElement.textContent = 'Cidade desconhecida';
+            temperatureElement.textContent = '--';
+        }
+    }
 }
+
+
 
 
 document.addEventListener('DOMContentLoaded', initApp);
