@@ -526,7 +526,7 @@ const showGIcon = () =>{
       const percent = (item.total / totalAmount) * 100;
 
       const barWrapper = document.createElement('div');
-      barWrapper.className = 'h-full flex flex-col items-center justify-end';
+      barWrapper.className = 'h-full flex flex-col items-center justify-end text-[#ff6464]';
 
       const bar = document.createElement('div');
       bar.style.height = `${percent}%`;
