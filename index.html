@@ -14,8 +14,8 @@
 
   </head>
   <body  >
-    <main class="bg-background-100 flex flex-col relative h-[100vh] overflow-y-auto pb-5" >
-      <header class="flex justify-between self-center mt-10 3xl:items-center w-[1418.25px] mx-auto max-3xl:w-[800px] max-3xl:flex-col max-4xl:w-full ">
+    <main class="bg-background-100 flex flex-col relative h-[100vh] overflow-y-auto pb-5">
+      <header class="flex justify-between self-center mt-10  3xl:items-center w-[1418.25px] mx-auto max-3xl:w-[800px] max-3xl:flex-col max-4xl:w-full ">
           <div class="flex flex-col max-3xl:mb-5 max-4xl:ml-5">
               <a href="/src/pages/indexteste.html"><p class="text-text-100 text-[16px]">Controle de Finanças Pessoais</p></a>
               <h1 class="text-text-200 text-[36px] font-bold mt-0.5 mb-1">Balanço mensal</h1>
@@ -102,20 +102,44 @@
           </div>
           <div class="flex w-[810px] max-3xl:justify-between max-3xl:mt-5 max-4xl:flex-col max-4xl:w-full 3xl:gap-5" >
             <div class="flex flex-col gap-5 max-4xl:w-full max-4xl:mb-5" >
-              <div  class="flex flex-col bg-background-200 w-[400px] pl-5 pr-5 pb-5 pt-3 rounded-[10px] h-[310px] max-4xl:w-full" >
+              <div  class="flex flex-col bg-background-200 w-[400px] pl-5 pr-5 pb-3 pt-3 rounded-[10px] h-[310px] max-4xl:w-full" >
                 <h2 class="text-text-200 font-semibold text-[26px] mb-2" >Receita por categoria</h2>
                 <div class="flex flex-col text-text-100 text-[26px] h-[210px] overflow-y-auto mt-2 my-scrollbar" id="income" >
                   
                 </div>
+                <div id="expense-chart2" class="h-68 flex mb-4 space-x-2" style="display: none;" ></div>
+                
+  
+                <div id="chart-legend2" class="flex flex-wrap gap-5 text-sm mt-10 text-text-100" style="display: none;" ></div>
+                <div id="RCicon" class="mt-2" >
+                  <svg class="text-[#5e81ac] hover:text-text-200 cursor-pointer" width="30px" height="30px" id="graph" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                      <title>icon/24/icon-graph</title>
+                      <desc>Created with Sketch.</desc>
+                      <defs>
+                      </defs>
+                      <g id="out" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                          <path d="M19,3 L5,3 C3.9,3 3,3.9 3,5 L3,19 C3,20.1 3.9,21 5,21 L19,21 C20.1,21 21,20.1 21,19 L21,5 C21,3.9 20.1,3 19,3 L19,3 L19,3 Z M9,17 L7,17 L7,10 L9,10 L9,17 L9,17 L9,17 Z M13,17 L11,17 L11,7 L13,7 L13,17 L13,17 L13,17 Z M17,17 L15,17 L15,13 L17,13 L17,17 L17,17 L17,17 Z" id="path" fill="currentColor" sketch:type="MSShapeGroup">
+
+                        </path>
+                      </g>
+                  </svg>
+                </div>
               </div>
               <div class=" bg-background-200 rounded-lg w-[400px] pl-5 pr-5 pb-5 pt-4 h-[500px] max-4xl:w-full">
                 <h2 class="text-text-200 font-semibold text-[26px] mb-5">Gastos por categoria</h2>
-                
+                 <div class="flex flex-col text-text-100 text-[26px] h-[350px] overflow-y-auto mt-2 my-scrollbar" id="income2" style="display: none;" >
+                  
+                </div>
                
                 <div id="expense-chart" class="h-68 flex mb-4 space-x-2"></div>
                 
   
                 <div id="chart-legend" class="flex flex-wrap gap-5 text-sm mt-10 text-text-100"></div>
+                <div id="RCicon2"  >
+                   <svg id='list2' class='text-[#5e81ac] hover:text-text-200 cursor-pointer mt-10' width='25px' height='25px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                    <path d='M8 6.00067L21 6.00139M8 12.0007L21 12.0015M8 18.0007L21 18.0015M3.5 6H3.51M3.5 12H3.51M3.5 18H3.51M4 6C4 6.27614 3.77614 6.5 3.5 6.5C3.22386 6.5 3 6.27614 3 6C3 5.72386 3.22386 5.5 3.5 5.5C3.77614 5.5 4 5.72386 4 6ZM4 12C4 12.2761 3.77614 12.5 3.5 12.5C3.22386 12.5 3 12.2761 3 12C3 11.7239 3.22386 11.5 3.5 11.5C3.77614 11.5 4 11.7239 4 12ZM4 18C4 18.2761 3.77614 18.5 3.5 18.5C3.22386 18.5 3 18.2761 3 18C3 17.7239 3.22386 17.5 3.5 17.5C3.77614 17.5 4 17.7239 4 18Z' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>
+                  </svg> 
+                </div>
               </div>
             </div>
             <div class="flex flex-col gap-5 max-4xl:w-full" >
@@ -136,7 +160,7 @@
           </div>
         </main>
         <!-- Add Category -->
-        <div class="w-full h-[100vh] fixed bg-background-100/70 text-white items-center justify-center hidden" id="showAddCategoryModal" >
+        <div class="w-full h-[100vh] fixed bg-background-100/70 text-white items-center justify-center hidden" id="showAddCategoryModal" >  
           <div class="w-80 bg-gray-700 rounded-lg p-4 shadow-lg">
             <div class="flex items-center justify-between" >
               <h2 class="text-xl text-white font-semibold mb-4">Criar nova categoria</h2>

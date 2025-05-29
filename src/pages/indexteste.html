@@ -1,37 +1,321 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPA com JS Puro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>DOOM Original - Navegador</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: #8B0000;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 20px #ff0000;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 0 0 10px #ff0000;
+            letter-spacing: 5px;
+        }
+        
+        .game-frame {
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            border: 3px solid #ff0000;
+            background: #000;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 30px #ff0000;
+        }
+        
+        .controls {
+            background: #111;
+            padding: 20px;
+            border: 2px solid #333;
+            margin: 20px 0;
+            text-align: left;
+            display: inline-block;
+            width: 90%;
+            max-width: 800px;
+        }
+        
+        .controls h3 {
+            color: #ff0000;
+            margin-top: 0;
+            text-align: center;
+        }
+        
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .control-section {
+            background: #222;
+            padding: 10px;
+            border: 1px solid #444;
+        }
+        
+        .control-section h4 {
+            color: #ff6666;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .control-section ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 0.9em;
+        }
+        
+        .warning {
+            background: #333;
+            border: 2px solid #ff6600;
+            padding: 15px;
+            margin: 20px 0;
+            color: #ffaa00;
+        }
+        
+        .loading {
+            color: #00ff00;
+            font-size: 1.2em;
+            margin: 20px 0;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .option-card {
+            background: #1a1a1a;
+            border: 2px solid #444;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .option-card:hover {
+            border-color: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+        
+        .option-card h3 {
+            color: #ff0000;
+            margin-top: 0;
+        }
+        
+        .btn {
+            background: #8B0000;
+            color: #fff;
+            border: 2px solid #ff0000;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #ff0000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        
+        #dosbox {
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        
+        .info {
+            background: #003300;
+            border: 2px solid #00ff00;
+            padding: 15px;
+            margin: 20px 0;
+            color: #00ff00;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 h-full flex items-center justify-center">
-
-    <div class="w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
-        <nav class="flex justify-between border-b pb-2">
-            <a href="#home" class="text-blue-500">Home</a>
-            <a href="#about" class="text-blue-500">Sobre</a>
-            <a href="#contact" class="text-blue-500">Contato</a>
-        </nav>
-        <div id="app" class="mt-4"></div>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 DOOM 🔥</h1>
+            <p>O Clássico dos Clássicos no seu Navegador</p>
+        </div>
+        
+        <div class="info">
+            <h3>📖 Como Usar:</h3>
+            <p>Esta implementação usa JS-DOS para rodar o DOOM original. Escolha uma das opções abaixo para começar a jogar!</p>
+        </div>
+        
+        <div class="options">
+            <div class="option-card">
+                <h3>🎮 Opção 1: JS-DOS Embed</h3>
+                <p>Versão completa usando emulador DOS</p>
+                <button class="btn" onclick="loadJSDOS()">Carregar DOOM</button>
+            </div>
+            
+            <div class="option-card">
+                <h3>🌐 Opção 2: WebAssembly</h3>
+                <p>Versão nativa para navegador</p>
+                <a class="btn" href="https://diekmann.github.io/wasm-fizzbuzz/doom/" target="_blank">Jogar WASM DOOM</a>
+            </div>
+            
+            <div class="option-card">
+                <h3>📱 Opção 3: DOS Zone</h3>
+                <p>Com controles móveis</p>
+                <a class="btn" href="https://dos.zone/doom-dec-1993/" target="_blank">Jogar Online</a>
+            </div>
+        </div>
+        
+        <div class="game-frame" id="gameContainer" style="display: none;">
+            <div id="dosbox"></div>
+        </div>
+        
+        <div class="loading" id="loadingText" style="display: none;">
+            ⚡ CARREGANDO DOOM... ⚡
+        </div>
+        
+        <div class="controls">
+            <h3>🎯 CONTROLES DO DOOM</h3>
+            <div class="control-grid">
+                <div class="control-section">
+                    <h4>Movimento:</h4>
+                    <ul>
+                        <li>↑ ↓ ← → - Mover/Virar</li>
+                        <li>Alt + ← → - Andar lateralmente</li>
+                        <li>Shift - Correr</li>
+                    </ul>
+                </div>
+                
+                <div class="control-section">
+                    <h4>Combate:</h4>
+                    <ul>
+                        <li>Ctrl - Atirar</li>
+                        <li>Espaço - Abrir portas/Usar</li>
+                        <li>1-7 - Trocar armas</li>
+                    </ul>
+                </div>
+                
+                <div class="control-section">
+                    <h4>Interface:</h4>
+                    <ul>
+                        <li>Enter - Confirmar</li>
+                        <li>Esc - Menu</li>
+                        <li>Tab - Mapa</li>
+                        <li>F1 - Ajuda</li>
+                    </ul>
+                </div>
+                
+                <div class="control-section">
+                    <h4>Extras:</h4>
+                    <ul>
+                        <li>F2 - Salvar jogo</li>
+                        <li>F3 - Carregar jogo</li>
+                        <li>F11 - Tela cheia</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="warning">
+            <h3>⚠️ IMPORTANTE:</h3>
+            <p>• O jogo pode demorar alguns segundos para carregar</p>
+            <p>• Use Ctrl+Zoom para ajustar o tamanho da tela</p>
+            <p>• Salvar/Carregar funciona apenas durante a sessão</p>
+            <p>• Para melhor performance, feche outras abas</p>
+        </div>
     </div>
 
     <script>
-        const routes = {
-            home: `<h1 class="text-xl font-bold">🏡 Bem-vindo à Home!</h1><p class="mt-2">Esta é a página inicial.</p>`,
-            about: `<h1 class="text-xl font-bold">ℹ️ Sobre nós</h1><p class="mt-2">Aqui falamos sobre nossa aplicação.</p>`,
-            contact: `<h1 class="text-xl font-bold">📞 Contato</h1><p class="mt-2">Fale conosco pelo email contato@spa.com</p>`,
-        };
-
-        function loadRoute() {
-            const hash = window.location.hash.substring(1) || "home";
-            document.getElementById("app").innerHTML = routes[hash] || `<h1 class="text-red-500">404 - Página não encontrada</h1>`;
+        function loadJSDOS() {
+            const container = document.getElementById('gameContainer');
+            const loading = document.getElementById('loadingText');
+            const dosbox = document.getElementById('dosbox');
+            
+            loading.style.display = 'block';
+            container.style.display = 'block';
+            
+            // Método 1: Iframe com JS-DOS
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://js-dos.com/games/doom.exe.html';
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.background = '#000';
+            
+            iframe.onload = function() {
+                loading.style.display = 'none';
+            };
+            
+            dosbox.appendChild(iframe);
+            
+            // Scroll para o jogo
+            container.scrollIntoView({ behavior: 'smooth' });
         }
-
-        window.addEventListener("hashchange", loadRoute);
-        window.addEventListener("load", loadRoute);
+        
+        // Método alternativo usando script direto (descomente se preferir)
+        function loadDirectDoom() {
+            const script = document.createElement('script');
+            script.src = 'https://js-dos.com/v7/build/js-dos.js';
+            script.onload = function() {
+                // Configurar JS-DOS aqui
+                if (typeof Dos !== 'undefined') {
+                    const ci = window.emulators.pathPrefix('/games/doom.exe');
+                    ci.run('doom.exe');
+                }
+            };
+            document.head.appendChild(script);
+        }
+        
+        // Atalhos de teclado
+        document.addEventListener('keydown', function(e) {
+            // F11 para tela cheia
+            if (e.key === 'F11') {
+                e.preventDefault();
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    document.documentElement.requestFullscreen();
+                }
+            }
+        });
+        
+        // Redimensionar iframe quando necessário
+        window.addEventListener('resize', function() {
+            const iframe = document.querySelector('#dosbox iframe');
+            if (iframe) {
+                // Reajustar se necessário
+            }
+        });
     </script>
-
 </body>
 </html>

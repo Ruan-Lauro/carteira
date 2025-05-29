@@ -133,6 +133,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
   
+const deleteCategory = (id) => {
+  const listCategory = JSON.parse(localStorage.getItem('listCategory')) || [];
+  const listTransaction = JSON.parse(localStorage.getItem('listTransaction')) || [];
+
+  const updatedCategory = listCategory.filter(cat => cat.id !== id);
+
+  const updatedTransaction = listTransaction.filter(trans => trans.categoryId !== id);
+
+  localStorage.setItem('listCategory', JSON.stringify(updatedCategory));
+  localStorage.setItem('listTransaction', JSON.stringify(updatedTransaction));
+
+  dataCategory();
+  window.dataTrasacao();
+  window.moneyMenu();
+
+};
+
 const dataCategory = () => {
     const listCategory = JSON.parse(localStorage.getItem('listCategory')) || [];
     const htmlCategory = document.getElementById('showCategory');
@@ -144,12 +161,34 @@ const dataCategory = () => {
             <div class="flex items-center justify-center w-13 h-13 rounded-full" style="background-color: ${cat.color};">
                 <i class="fas ${cat.icon} text-[28px] text-[#eceff4]"></i>
             </div>
-            <p class="text-[26px] font-semibold max-5xl:text-[22px] truncate max-w-[179px]">${cat.name}</p>
+            <div class="flex gap-3 items-center justify-between w-[70%]" >
+                <p class="text-[26px] font-semibold max-5xl:text-[22px] truncate max-w-[179px]">${cat.name}</p>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="text-[#f5284e] hover:text-[#ff0000] cursor-pointer hover:scale-105 transition-all duration-300 delete-category"
+                    data-id="${cat.id}"
+                    viewBox="0 0 30 30" width="20px" height="20px">
+                    <path d="M 13 3 A 1.0001 1.0001 0 0 0 11.986328 4 L 6 4 A 1.0001 1.0001 0 1 0 6 6 L 24 6 A 1.0001 1.0001 0 1 0 24 4 L 18.013672 4 A 1.0001 1.0001 0 0 0 17 3 L 13 3 z M 6 8 L 6 24 C 6 25.105 6.895 26 8 26 L 22 26 C 23.105 26 24 25.105 24 24 L 24 8 L 6 8 z"
+                    fill="currentColor" />
+                </svg>
+
+            </div>
         </div>
     `).join('');
 
     dataCategoryShowUser();
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+  dataCategory();
+
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.delete-category')) {
+      const idToDelete = e.target.closest('.delete-category').getAttribute('data-id');
+      deleteCategory(idToDelete);
+    }
+  });
+});
+
 
 const dataCategoryShowUser = () => {
     const category = document.getElementById('category');
