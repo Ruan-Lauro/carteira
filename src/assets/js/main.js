@@ -87,24 +87,6 @@ async function getCityByIP() {
     }
 }
 
-async function getWeatherFromWttr(city) {
-    try {
-        const response = await fetch(`https://wttr.in/${city}?format=j1`);
-        const data = await response.json();
-  
-        const tempC = data.current_condition[0].temp_C;
-        return {
-            temperature: tempC,
-            cityName: city
-        };
-    } catch (error) {
-        console.error('Erro ao obter dados do wttr.in:', error);
-        return {
-            temperature: '--',
-            cityName: city
-        };
-    }
-}
 async function initApp() {
     const currentDateElement = document.getElementById('current-date');
     const cityNameElement = document.getElementById('city-name');
@@ -113,35 +95,32 @@ async function initApp() {
     if (currentDateElement) {
         currentDateElement.textContent = formatDate();
     }
-    localStorage.removeItem('city')
 
     let cityData;
-    const storedCity = localStorage.getItem('city');
 
     try {
+        const ipInfo = await getCityByIP();
+        cityData = {
+            city: ipInfo.nearest_area[0].areaName[0].value,
+            temp_C: ipInfo.current_condition[0].temp_C
+        };
+        localStorage.setItem('city', JSON.stringify(cityData));
+    } catch (error) {
+        console.error('Erro ao buscar dados pela API, tentando localStorage:', error);
+        const storedCity = localStorage.getItem('city');
         if (storedCity) {
             cityData = JSON.parse(storedCity);
         } else {
-            const ipInfo = await getCityByIP();
-            console.log(ipInfo);
-            cityData = { city: ipInfo.nearest_area[0].areaName[0].value};
-            localStorage.setItem('city', JSON.stringify(cityData));
+            cityData = null;
         }
+    }
 
-        const weatherData = await getWeatherFromWttr(cityData.city);
-
-        if (cityNameElement && temperatureElement) {
-            cityNameElement.textContent = cityData.city;
-            temperatureElement.textContent = `${weatherData.temperature}º`;
-        }
-
-    } catch (error) {
-        console.error('Erro ao inicializar a aplicação:', error);
-
-        if (cityNameElement && temperatureElement) {
-            cityNameElement.textContent = 'Cidade desconhecida';
-            temperatureElement.textContent = '--';
-        }
+    if (cityData && cityNameElement && temperatureElement) {
+        cityNameElement.textContent = cityData.city;
+        temperatureElement.textContent = `${cityData.temp_C}º`;
+    } else if (cityNameElement && temperatureElement) {
+        cityNameElement.textContent = 'Cidade desconhecida';
+        temperatureElement.textContent = '--';
     }
 }
 
