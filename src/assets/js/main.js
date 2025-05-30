@@ -77,7 +77,7 @@ function formatDate() {
 
 async function getCityByIP() {
     try {
-        const response = await fetch('https://ipinfo.io?token=8f9ccc19db938c');
+        const response = await fetch('https://pt.wttr.in/?format=j1');
         console.log(response)
         const city = await response.json();
         return city;
@@ -113,6 +113,7 @@ async function initApp() {
     if (currentDateElement) {
         currentDateElement.textContent = formatDate();
     }
+    localStorage.removeItem('city')
 
     let cityData;
     const storedCity = localStorage.getItem('city');
@@ -122,7 +123,8 @@ async function initApp() {
             cityData = JSON.parse(storedCity);
         } else {
             const ipInfo = await getCityByIP();
-            cityData = { city: ipInfo.city };
+            console.log(ipInfo);
+            cityData = { city: ipInfo.nearest_area[0].areaName[0].value};
             localStorage.setItem('city', JSON.stringify(cityData));
         }
 
