@@ -39,7 +39,7 @@ async function updateExchangeRates() {
         Object.entries(exchangeRates.rates).forEach(([key, value]) => {
             const div = document.createElement('div');
             div.className = "w-full flex justify-between mb-2";
-            div.innerHTML = `<p class="font-semibold max-5xl:text-[22px]">${key.charAt(0).toUpperCase() + key.slice(1)}</p><p class="max-5xl:text-[22px]" >R$ ${Number(value).toLocaleString('pt-BR', {
+            div.innerHTML = `<p class="font-semibold max-5xl:text-[22px]">${key.charAt(0).toUpperCase() + key.slice(1)}</p><p class="max-5xl:text-[22px]" > ${Number(value).toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL'
         })}</p>`;
