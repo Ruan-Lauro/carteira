@@ -333,3 +333,37 @@ document.addEventListener('DOMContentLoaded', () => {
     
     carregarChartJS();
 });
+
+const moneyMenu = () => {
+    const listTransaction = JSON.parse(localStorage.getItem('listTransaction')) || [];
+    const moneyMenu = document.getElementById('money');
+    if (listTransaction.length === 0){
+        moneyMenu.style.color = '#27f53c';
+        moneyMenu.innerText = `R$ 0`;
+        return;
+    };
+
+    if (moneyMenu) {
+        let money = 0;
+        listTransaction.forEach(val => {
+            let value = parseFloat(val.value); 
+
+            if (!isNaN(value)) { 
+                if (val.type === 'despesa') {
+                    money -= value;
+                } else {
+                    money += value;
+                }
+            }
+        });
+
+        moneyMenu.style.color = money >= 0?'#27f53c':'#f5284e';
+        moneyMenu.innerText = money.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+
+    }
+};
+
+moneyMenu();
