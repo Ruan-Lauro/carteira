@@ -84,7 +84,6 @@ async function getCityByIP() {
     } catch (error) {
         console.error('Erro ao buscar cidade pelo IP:', error);
         return 'Cidade desconhecida';
-        
     }
 }
 
