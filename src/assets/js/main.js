@@ -75,17 +75,152 @@ function formatDate() {
     return `${diaSemana}, ${dia} de ${mes} de ${ano}`;
 }
 
+// Configuração padrão para localhost (Picos, PI)
+const DEFAULT_LOCATION = {
+    city: 'Picos',
+    region: 'Piauí',
+    country: 'Brasil',
+    lat: -7.0754,
+    lon: -41.4663
+};
+
+async function getLocationByIP() {
+    // Lista de APIs de geolocalização por IP (fallback)
+    const ipApis = [
+        'http://ip-api.com/json/?fields=city,regionName,country,lat,lon,status',
+        'https://ipapi.co/json/',
+        'https://api.ipgeolocation.io/ipgeo?apiKey=&fields=city,state_prov,country_name,latitude,longitude'
+    ];
+
+    for (const apiUrl of ipApis) {
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            
+            // Verificar se é localhost ou IP local
+            if (data.status === 'fail' || 
+                data.city === '' || 
+                !data.city || 
+                data.error ||
+                data.lat === 0) {
+                continue; // Tentar próxima API
+            }
+
+            return {
+                city: data.city || data.city_name,
+                region: data.regionName || data.state_prov || data.region,
+                country: data.country || data.country_name,
+                lat: parseFloat(data.lat || data.latitude),
+                lon: parseFloat(data.lon || data.longitude)
+            };
+        } catch (error) {
+            console.log(`Erro na API ${apiUrl}:`, error);
+            continue; // Tentar próxima API
+        }
+    }
+
+    // Se todas as APIs falharam (localhost), usar localização padrão
+    console.log('Usando localização padrão (localhost detectado)');
+    return DEFAULT_LOCATION;
+}
+
+async function getWeatherData(lat, lon) {
+    // Lista de APIs de tempo (fallback)
+    const weatherApis = [
+        {
+            url: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`,
+            parser: (data) => ({
+                temp_C: Math.round(data.current_weather.temperature),
+                description: getWeatherDescription(data.current_weather.weathercode)
+            })
+        },
+        {
+            url: `https://api.weatherapi.com/v1/current.json?key=&q=${lat},${lon}`, // Você pode adicionar uma key gratuita
+            parser: (data) => ({
+                temp_C: Math.round(data.current.temp_c),
+                description: data.current.condition.text
+            })
+        }
+    ];
+
+    for (const api of weatherApis) {
+        try {
+            const response = await fetch(api.url);
+            if (!response.ok) continue;
+            
+            const data = await response.json();
+            return api.parser(data);
+        } catch (error) {
+            console.log(`Erro na API de tempo:`, error);
+            continue;
+        }
+    }
+
+    // Fallback se todas as APIs de tempo falharam
+    return {
+        temp_C: '--',
+        description: 'Não disponível'
+    };
+}
+
+// Converter código do tempo do Open-Meteo para descrição
+function getWeatherDescription(code) {
+    const weatherCodes = {
+        0: 'Céu limpo',
+        1: 'Principalmente limpo',
+        2: 'Parcialmente nublado',
+        3: 'Nublado',
+        45: 'Neblina',
+        48: 'Neblina com geada',
+        51: 'Garoa leve',
+        53: 'Garoa moderada',
+        55: 'Garoa forte',
+        61: 'Chuva leve',
+        63: 'Chuva moderada',
+        65: 'Chuva forte',
+        80: 'Chuva fraca',
+        81: 'Chuva moderada',
+        82: 'Chuva violenta',
+        95: 'Tempestade'
+    };
+    return weatherCodes[code] || 'Tempo desconhecido';
+}
+
 async function getCityByIP() {
     try {
-        const response = await fetch('https://pt.wttr.in/?format=j1');
-        console.log(response)
-        const city = await response.json();
-        return city;
+        // 1. Obter localização
+        const location = await getLocationByIP();
+        
+        // 2. Obter dados do tempo
+        const weather = await getWeatherData(location.lat, location.lon);
+        
+        // 3. Retornar no formato compatível com seu código
+        return {
+            nearest_area: [{
+                areaName: [{ value: location.city }]
+            }],
+            current_condition: [{
+                temp_C: weather.temp_C
+            }],
+            // Dados extras disponíveis
+            location: location,
+            weather_description: weather.description
+        };
     } catch (error) {
-        console.error('Erro ao buscar cidade pelo IP:', error);
-        return 'Cidade desconhecida';
+        console.error('Erro ao buscar dados de localização e tempo:', error);
+        
+        // Fallback com dados padrão
+        return {
+            nearest_area: [{
+                areaName: [{ value: DEFAULT_LOCATION.city }]
+            }],
+            current_condition: [{
+                temp_C: '--'
+            }]
+        };
     }
 }
+
 
 async function initApp() {
     const currentDateElement = document.getElementById('current-date');
