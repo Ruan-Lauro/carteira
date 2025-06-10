@@ -77,7 +77,7 @@ function formatDate() {
 
 // Configuração padrão para localhost (Picos, PI)
 const DEFAULT_LOCATION = {
-    city: 'Picos',
+    city: 'Flamengo',
     region: 'Piauí',
     country: 'Brasil',
     lat: -7.0754,
@@ -85,78 +85,120 @@ const DEFAULT_LOCATION = {
 };
 
 async function getLocationByIP() {
-    // Lista de APIs de geolocalização por IP (fallback)
+    // APIs que funcionam com HTTPS e têm CORS habilitado
     const ipApis = [
-        'http://ip-api.com/json/?fields=city,regionName,country,lat,lon,status',
-        'https://ipapi.co/json/',
-        'https://api.ipgeolocation.io/ipgeo?apiKey=&fields=city,state_prov,country_name,latitude,longitude'
+        {
+            url: 'https://api.ipgeolocation.io/ipgeo?apiKey=ccdaa92046c54334a2c6693e1ece3bb5',
+            parser: (data) => ({
+                city: data.city,
+                region: data.state_prov,
+                country: data.country_name,
+                lat: parseFloat(data.latitude),
+                lon: parseFloat(data.longitude),
+                valid: data.city && data.latitude && data.longitude
+            })
+        },
+        {
+            url: 'https://ipapi.co/json/',
+            parser: (data) => ({
+                city: data.city,
+                region: data.region,
+                country: data.country_name,
+                lat: parseFloat(data.latitude),
+                lon: parseFloat(data.longitude),
+                valid: data.city && data.latitude && data.longitude && !data.error
+            })
+        },
+        {
+            url: 'https://api.seeip.org/geoip',
+            parser: (data) => ({
+                city: data.city,
+                region: data.region,
+                country: data.country,
+                lat: parseFloat(data.latitude),
+                lon: parseFloat(data.longitude),
+                valid: data.city && data.latitude && data.longitude
+            })
+        }
     ];
 
-    for (const apiUrl of ipApis) {
+    for (const api of ipApis) {
         try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
+            const response = await fetch(api.url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
             
-            // Verificar se é localhost ou IP local
-            if (data.status === 'fail' || 
-                data.city === '' || 
-                !data.city || 
-                data.error ||
-                data.lat === 0) {
-                continue; // Tentar próxima API
+            if (!response.ok) continue;
+            
+            const data = await response.json();
+            const parsed = api.parser(data);
+            
+            // Verificar se os dados são válidos
+            if (parsed.valid && parsed.city && parsed.lat !== 0) {
+                console.log(`Localização obtida via ${api.url}:`, parsed.city);
+                return parsed;
             }
-
-            return {
-                city: data.city || data.city_name,
-                region: data.regionName || data.state_prov || data.region,
-                country: data.country || data.country_name,
-                lat: parseFloat(data.lat || data.latitude),
-                lon: parseFloat(data.lon || data.longitude)
-            };
         } catch (error) {
-            console.log(`Erro na API ${apiUrl}:`, error);
-            continue; // Tentar próxima API
+            console.log(`Erro na API ${api.url}:`, error.message);
+            continue;
         }
     }
 
-    // Se todas as APIs falharam (localhost), usar localização padrão
-    console.log('Usando localização padrão (localhost detectado)');
+    // Se todas as APIs falharam, usar localização padrão
+    console.log('Usando localização padrão (APIs de geolocalização falharam)');
     return DEFAULT_LOCATION;
 }
 
 async function getWeatherData(lat, lon) {
-    // Lista de APIs de tempo (fallback)
+    // APIs de tempo que funcionam com HTTPS e CORS
     const weatherApis = [
         {
             url: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`,
             parser: (data) => ({
                 temp_C: Math.round(data.current_weather.temperature),
-                description: getWeatherDescription(data.current_weather.weathercode)
+                description: getWeatherDescription(data.current_weather.weathercode),
+                valid: data.current_weather && data.current_weather.temperature !== undefined
             })
         },
         {
-            url: `https://api.weatherapi.com/v1/current.json?key=&q=${lat},${lon}`, // Você pode adicionar uma key gratuita
+            url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=&units=metric`, 
             parser: (data) => ({
-                temp_C: Math.round(data.current.temp_c),
-                description: data.current.condition.text
+                temp_C: Math.round(data.main.temp),
+                description: data.weather[0].description,
+                valid: data.main && data.main.temp !== undefined
             })
         }
     ];
 
     for (const api of weatherApis) {
         try {
-            const response = await fetch(api.url);
+            const response = await fetch(api.url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
+            
             if (!response.ok) continue;
             
             const data = await response.json();
-            return api.parser(data);
+            const parsed = api.parser(data);
+            
+            if (parsed.valid) {
+                console.log(`Dados de tempo obtidos via ${api.url.split('?')[0]}`);
+                return parsed;
+            }
         } catch (error) {
-            console.log(`Erro na API de tempo:`, error);
+            console.log(`Erro na API de tempo:`, error.message);
             continue;
         }
     }
 
     // Fallback se todas as APIs de tempo falharam
+    console.log('Todas as APIs de tempo falharam, usando dados padrão');
     return {
         temp_C: '--',
         description: 'Não disponível'
@@ -258,7 +300,6 @@ async function initApp() {
         temperatureElement.textContent = '--';
     }
 }
-
 
 
 
